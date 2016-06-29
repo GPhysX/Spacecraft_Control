@@ -16,10 +16,10 @@ class spacecraft(object):
 		self.euler = euler
 		history = [self.euler]
 
+	
 	def Kinematic_euler(self, u, rot = 0):
 		if rot == 0:
-			rot = self.euler.rot
-
+		rot = self.euler.rot
 		fx1 = self.euler.N * rot
 		fx2 = np.cross(-self.J.I*self.euler.OMEGA_fn(rot), self.J*rot, axis = 0)
 		fx = np.array([[fx1], [fx2]])
@@ -42,17 +42,17 @@ class spacecraft(object):
 		self.euler.update_rot(rot)
 		self.history.append(self.euler)
 
-	def kin_euler(self, omega):
-		theta1 = self.euler.theta1
-		theta2 = self.euler.theta2
-		theta3 = self.euler.theta3
-		self.rot = 1/cos(2*theta1) * np.matrix([[cos(theta2), sin(theta1)*sin(theta2), cos(theta1)*sin(theta2)],[0, cos(theta1)*cos(theta2), -sin(theta1)*cos(theta2)],[0, sin(theta1), cos(theta1)]]) * omega
-
 	def kin_quat(self, omega):
 		q_d = 0.5 * self.quat.Q_omega() * omega
 
 	def kin_MRP(self, omega):
 		sd = 0.25 * MRP.N()*omega
+
+	def n_orbit(self):
+		mu = 3.986004418*10**14
+		orbit = float(self.orbit)
+		return sqrt(mu/orbit**3)
+
 
 class euler(object):
 	def __init__(self, theta1 = 0, theta2 = 0, theta3 = 0, theta1_d = 0, theta2_d = 0, theta3_d = 0):
@@ -62,42 +62,37 @@ class euler(object):
 		self.theta2_d = theta2_d
 		self.theta3 = theta3
 		self.theta3_d = theta3_d
-		self.attitude = np.matrix([theta1, theta2, theta3]).T
-		self.rot = np.matrix([theta1_d, theta2_d, theta3_d]).T
-		self.state = np.array([self.attitude.T, self.rot.T]).T
-		self.OMEGA = np.matrix([[0, -theta3_d, theta2_d],[theta3_d, 0, -theta1_d],[-theta2_d, theta1_d, 0]])
-		self.N = np.matrix([[1, sin(theta1)*tan(theta2), cos(theta1)*tan(theta2)],[0, cos(theta1), -sin(theta1)],[0, sin(theta1)/cos(theta2), cos(theta1)/cos(theta2)]])
+				
+	def update_attitude(att):
+		self.theta1 = att[0]
+		self.theta2 = att[1]
+		self.theta3 = att[2]		
 
-	def update_attitude(theta1, theta2, theta3):
-		self.theta1 = theta1
-		self.theta2 = theta2
-		self.theta3 = theta3
-		self.attitude = np.matrix([theta1, theta2, theta3]).T
-		self.N = np.matrix([[1, sin(theta1)*tan(theta2), cos(theta1)*tan(theta2)],[0, cos(theta1), -sin(theta1)],[0, sin(theta1)/cos(theta2), cos(theta1)/cos(theta2)]])
-
-
-	def update_rot(theta1_d, theta2_d, theta3):
-		self.theta1_d = theta1_d
-		self.theta2_d = theta2_d
-		self.theta3_d = theta3_d
-		self.rot = np.matrix([theta1_d, theta2_d, theta3_d]).T
-		self.state = np.array([self.attitude.T, self.rot.T]).T
-		self.OMEGA = np.matrix([[0, -theta3_d, theta2_d],[theta3_d, 0, -theta1_d],[-theta2_d, theta1_d, 0]])
-		
-	def update_var(rot, att = 0):
-		if not att == 0:
-			self.theta1 = att[0]
-			self.theta2 = att[1]
-			self.theta3 = att[2]
-
+	def update_rot(rot):
 		self.theta1_d = rot[0]
 		self.theta2_d = rot[1]
 		self.theta3_d = rot[2]
-
-	def OMEGA_fn(self, rot):
+				
+	def OMEGA(self, rot = 0):
+		if rot == 0:
+			rot = self.rot()
 		return np.matrix([[0, -rot[2], rot[1]],
 			[rot[2], 0, -rot[0]],
 			[-rot[1], rot[0], 0]])
+
+	def N(self):
+		return np.matrix([[1, sin(self.theta1)*tan(self.theta2), cos(self.theta1)*tan(self.theta2)],
+			[0, cos(self.theta1), -sin(self.theta1)],
+			[0, sin(self.theta1)/cos(self.theta2), cos(self.theta1)/cos(self.theta2)]])
+
+	def attitude(self):
+		return np.matrix([self.theta1, self.theta2, self.theta3]).T
+
+	def rot(self):
+		return np.matrix([self.theta1_d, self.theta2_d, self.theta3_d]).T
+
+	def state(self):
+		return np.array([self.attitude().T, self.rot().T]).T
 
 
 class quaternions(object):
@@ -111,13 +106,16 @@ class quaternions(object):
 		self.q3d = 0
 		self.q4d = 0
 
-		self.rot = np.matrix([self.q1d, self.q2d, self.q3d, self.q4d]).T
-		self.q = np.matrix([self.q1, self.q2, self.q3, self.q4]).T
-
 	def Q_omega(self):
 		return ([[q4, -q3, q2, q1],[q3, q4, -q1, q2],
 			[-q2, q1, q4, q3],
 			[-q1, -q2, -q3, q4]])
+
+	def state(self):
+		return np.matrix([q1,q2,q3,q4]).T
+
+	def rot(self):
+		return np.matrix([q1d, q2d, q3d, q4d]).T
 
 
 class MRP(object):
@@ -129,10 +127,10 @@ class MRP(object):
 		self.s2d = 0
 		self.s3d = 0
 
-	def s(self):
+	def attitude(self):
 		return np.matrix([self.s1, self.s2, self.s3]).T
 
-	def sd(self):
+	def rot(self):
 		return np.matrix([self.s1d, self.s2d, self.s3d]).T
 
 	def N(self):
