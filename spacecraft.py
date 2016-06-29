@@ -2,6 +2,8 @@
 import numpy as np
 from math import *
 delta_t = 0.1
+Td = np.matrix([0.01,0.01,0.01]).T
+Tc = np.matrix([0,0,0]).T
 
 class spacecraft(object):
 
@@ -16,16 +18,23 @@ class spacecraft(object):
 
 	def Kinematic_euler(self, u, rot = 0):
 		if rot == 0:
-			rot = self.euler.rot					
+			rot = self.euler.rot
+
 		fx1 = self.euler.N * rot
 		fx2 = np.cross(-self.J.I*self.euler.OMEGA_fn(rot), self.J*rot, axis = 0)
 		fx = np.array([[fx1], [fx2]])
-		Gx = np.array([[np.zeros(3), np.zeros(3)],[self.J.I, self.J.I]])
+		Gx = np.array([[np.zeros((3,3)), np.zeros((3,3))],[self.J.I, self.J.I]])
+		
+		#print(u.shape)
+		#print(Gx.shape)
+		#print(fx.shape)
+		#print(Gx)
+		print(fx)
 		x_d = fx + Gx * u
-		print x_d
+		print x_d.shape
 		return x_d
 
-	def Heun(self, u = np.matrix([0.01,0.01,0.01])):
+	def Heun(self, u = np.array([Td,Tc])):
 		x_d = self.Kinematic_euler(u)
 		rot_ = self.euler.rot + x_d * delta_t
 		x_d2 = self.Kinematic_euler(u, rot_)
