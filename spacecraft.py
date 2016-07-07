@@ -16,29 +16,32 @@ class spacecraft(object):
 		self.euler = euler
 		history = [self.euler]
 
-	
-	def Kinematic_euler(self, u, rot = 0):
-		if rot == 0:
-		rot = self.euler.rot
-		fx1 = self.euler.N * rot
-		fx2 = np.cross(-self.J.I*self.euler.OMEGA_fn(rot), self.J*rot, axis = 0)
+	def Kinematic_euler(self, u, rot = np.array([0,0,0])):
+		if rot.all() == 0:
+			rot = self.euler.rot()
+		print rot.shape
+		fx1 = np.dot(self.euler.N(), rot)
+		fx2 = np.cross( np.dot(np.array(-self.J.I),self.euler.OMEGA(rot)), np.dot(np.array(self.J),rot))
+		print(fx1.shape)
+		print(fx2.shape)
+		
 		fx = np.array([[fx1], [fx2]])
 		Gx = np.array([[np.zeros((3,3)), np.zeros((3,3))],[self.J.I, self.J.I]])
-		
 		#print(u.shape)
 		#print(Gx.shape)
-		#print(fx.shape)
+		#print(u.shape)
 		#print(Gx)
-		print(fx)
+		#print(fx)
 		x_d = fx + Gx * u
 		print x_d.shape
 		return x_d
 
 	def Heun(self, u = np.array([Td,Tc])):
 		x_d = self.Kinematic_euler(u)
-		rot_ = self.euler.rot + x_d * delta_t
+		rot_ = self.euler.rot() + x_d * delta_t
 		x_d2 = self.Kinematic_euler(u, rot_)
-		rot = self.euler.rot + delta_t/2*(x_d + x_d2)
+		rot = self.euler.rot() + delta_t/2*(x_d + x_d2)
+		print rot.shape
 		self.euler.update_rot(rot)
 		self.history.append(self.euler)
 
@@ -63,33 +66,33 @@ class euler(object):
 		self.theta3 = theta3
 		self.theta3_d = theta3_d
 				
-	def update_attitude(att):
+	def update_attitude(self, att):
 		self.theta1 = att[0]
 		self.theta2 = att[1]
 		self.theta3 = att[2]		
 
-	def update_rot(rot):
+	def update_rot(self, rot):
 		self.theta1_d = rot[0]
 		self.theta2_d = rot[1]
 		self.theta3_d = rot[2]
 				
-	def OMEGA(self, rot = 0):
-		if rot == 0:
+	def OMEGA(self, rot = np.array([0,0,0])):
+		if rot.all() == 0:
 			rot = self.rot()
-		return np.matrix([[0, -rot[2], rot[1]],
+		return np.array([[0, -rot[2], rot[1]],
 			[rot[2], 0, -rot[0]],
 			[-rot[1], rot[0], 0]])
 
 	def N(self):
-		return np.matrix([[1, sin(self.theta1)*tan(self.theta2), cos(self.theta1)*tan(self.theta2)],
+		return np.array([[1, sin(self.theta1)*tan(self.theta2), cos(self.theta1)*tan(self.theta2)],
 			[0, cos(self.theta1), -sin(self.theta1)],
 			[0, sin(self.theta1)/cos(self.theta2), cos(self.theta1)/cos(self.theta2)]])
 
 	def attitude(self):
-		return np.matrix([self.theta1, self.theta2, self.theta3]).T
+		return np.array([self.theta1, self.theta2, self.theta3]).T
 
 	def rot(self):
-		return np.matrix([self.theta1_d, self.theta2_d, self.theta3_d]).T
+		return np.array([self.theta1_d, self.theta2_d, self.theta3_d]).T
 
 	def state(self):
 		return np.array([self.attitude().T, self.rot().T]).T
