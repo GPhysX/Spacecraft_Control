@@ -16,27 +16,25 @@ class spacecraft(object):
 		self.euler = euler
 		history = [self.euler]
 
-	def Kinematic_euler(self, u, rot = np.array([0,0,0])):
+	def Kinematic_euler(self, u, rot = np.matrix([0,0,0])):
 		if rot.all() == 0:
 			rot = self.euler.rot()
-		print rot.shape
 		fx1 = np.dot(self.euler.N(), rot)
-		fx2 = np.cross( np.dot(np.array(-self.J.I),self.euler.OMEGA(rot)), np.dot(np.array(self.J),rot))
-		print(fx1.shape)
-		print(fx2.shape)
-		
-		fx = np.array([[fx1], [fx2]])
-		Gx = np.array([[np.zeros((3,3)), np.zeros((3,3))],[self.J.I, self.J.I]])
+		fx2 = np.dot( np.dot(-self.J.I,self.euler.OMEGA(rot)), np.dot(self.J,rot))
+		fx = np.bmat([[fx1], [fx2]])
+		Gx = np.bmat([[np.zeros((3,3)), np.zeros((3,3))],[self.J.I, self.J.I]])
 		#print(u.shape)
-		#print(Gx.shape)
-		#print(u.shape)
+		print(fx.shape)
+		print(Gx.shape)
+		print(u.shape)
 		#print(Gx)
-		#print(fx)
-		x_d = fx + Gx * u
+		print(np.dot(Gx, u).shape)
+		print(fx.shape)
+		x_d = fx + np.dot(Gx, u)
 		print x_d.shape
 		return x_d
 
-	def Heun(self, u = np.array([Td,Tc])):
+	def Heun(self, u = np.bmat([[Td],[Tc]])):
 		x_d = self.Kinematic_euler(u)
 		rot_ = self.euler.rot() + x_d * delta_t
 		x_d2 = self.Kinematic_euler(u, rot_)
@@ -76,26 +74,26 @@ class euler(object):
 		self.theta2_d = rot[1]
 		self.theta3_d = rot[2]
 				
-	def OMEGA(self, rot = np.array([0,0,0])):
+	def OMEGA(self, rot = np.matrix([0,0,0])):
 		if rot.all() == 0:
 			rot = self.rot()
-		return np.array([[0, -rot[2], rot[1]],
+		return np.matrix([[0, -rot[2], rot[1]],
 			[rot[2], 0, -rot[0]],
 			[-rot[1], rot[0], 0]])
 
 	def N(self):
-		return np.array([[1, sin(self.theta1)*tan(self.theta2), cos(self.theta1)*tan(self.theta2)],
+		return np.matrix([[1, sin(self.theta1)*tan(self.theta2), cos(self.theta1)*tan(self.theta2)],
 			[0, cos(self.theta1), -sin(self.theta1)],
 			[0, sin(self.theta1)/cos(self.theta2), cos(self.theta1)/cos(self.theta2)]])
 
 	def attitude(self):
-		return np.array([self.theta1, self.theta2, self.theta3]).T
+		return np.matrix([self.theta1, self.theta2, self.theta3]).T
 
 	def rot(self):
-		return np.array([self.theta1_d, self.theta2_d, self.theta3_d]).T
+		return np.matrix([self.theta1_d, self.theta2_d, self.theta3_d]).T
 
 	def state(self):
-		return np.array([self.attitude().T, self.rot().T]).T
+		return np.matrix([self.attitude().T, self.rot().T]).T
 
 
 class quaternions(object):
