@@ -1,14 +1,22 @@
 from math import *
 import numpy as numpy
 from spacecraft import *
+import matplotlib.pyplot as plt
+
+
 
 
 def main():
-	sc = spacecraft(euler())
+	sc = spacecraft(euler())	
 	#print sc.n_orbit()
-	for i in range(0,150):
+	plt.axis([0, 60, -0.03, 0.03])
+	plt.ion()
+	for i in range(0,600):
 		sc.Heun()
-		print (sc.euler.rot)
+		plt.scatter(sc.t, sc.euler.state()[1,0])
+		plt.scatter(sc.t, sc.euler.state()[0,0])
+		plt.draw()
+		#print (sc.euler.rot)
 
 
 

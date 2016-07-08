@@ -14,7 +14,8 @@ class spacecraft(object):
 		self.orbit = orbit 					#for now a constant, since only a circular orbit is used
 		self.J = np.matrix([[ixx,0,0],[0,iyy,0],[0,0,izz]])
 		self.euler = euler
-		history = [self.euler]
+		self.history = [self.euler.state()]
+		self.t = 0
 
 	def Kinematic_euler(self, u, rot = np.matrix([0,0,0])):
 		if rot.all() == 0:
@@ -24,24 +25,30 @@ class spacecraft(object):
 		fx = np.bmat([[fx1], [fx2]])
 		Gx = np.bmat([[np.zeros((3,3)), np.zeros((3,3))],[self.J.I, self.J.I]])
 		#print(u.shape)
-		print(fx.shape)
-		print(Gx.shape)
-		print(u.shape)
+		#print(fx.shape)
+		#print(Gx.shape)
+		#print(u.shape)
 		#print(Gx)
-		print(np.dot(Gx, u).shape)
-		print(fx.shape)
+		#print(np.dot(Gx, u).shape)
+		#print(fx.shape)
 		x_d = fx + np.dot(Gx, u)
-		print x_d.shape
+		#print x_d.shape
 		return x_d
 
 	def Heun(self, u = np.bmat([[Td],[Tc]])):
 		x_d = self.Kinematic_euler(u)
-		rot_ = self.euler.rot() + x_d * delta_t
-		x_d2 = self.Kinematic_euler(u, rot_)
-		rot = self.euler.rot() + delta_t/2*(x_d + x_d2)
-		print rot.shape
-		self.euler.update_rot(rot)
-		self.history.append(self.euler)
+		#print self.euler.rot().shape
+		#print x_d.shape
+		#print self.euler.state().shape
+		x = self.euler.state() + x_d * delta_t
+		#print x.shape
+		x_d2 = self.Kinematic_euler(u, self.euler.rot_(x))
+		x = self.euler.state() + delta_t/2*(x_d + x_d2)
+		#print x.shape
+		print x.T
+		self.t += delta_t
+		self.euler.update_state(x)
+		self.history.append(self.euler.state())
 
 	def kin_quat(self, omega):
 		q_d = 0.5 * self.quat.Q_omega() * omega
@@ -92,8 +99,27 @@ class euler(object):
 	def rot(self):
 		return np.matrix([self.theta1_d, self.theta2_d, self.theta3_d]).T
 
+	def attitude_(self, state):
+		return np.matrix([state[0][0], state[1][0], state[2][0]]).T
+
+	def rot_(self, state):
+		return np.matrix([state[3,0], state[4,0], state[5,0]]).T
+	
 	def state(self):
-		return np.matrix([self.attitude().T, self.rot().T]).T
+		return np.bmat([[self.attitude()], [self.rot()]])
+
+	def x(self):
+		return self.state()
+
+	def update_state(self, state):
+		self.theta1 = state[0,0]
+		self.theta2 = state [1,0]
+		self.theta3 = state [2,0]
+		self.theta1_d = state[3,0]
+		self.theta2_d = state[4,0]
+		self.theta3_d = state[5,0]
+
+
 
 
 class quaternions(object):
