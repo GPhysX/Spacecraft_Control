@@ -1,7 +1,7 @@
 #
 import numpy as np
 from math import *
-delta_t = 0.1
+delta_t = 0.01
 Td = np.matrix([0.01,0.01,0.01]).T
 Tc = np.matrix([0,0,0]).T
 
@@ -27,8 +27,7 @@ class spacecraft(object):
 		#print(u.shape)
 		#print(fx.shape)
 		#print(Gx.shape)
-		#print(u.shape)
-		#print(Gx)
+		u = np.bmat([[Td], [u]])
 		#print(np.dot(Gx, u).shape)
 		#print(fx.shape)
 		x_d = fx + np.dot(Gx, u)
@@ -45,7 +44,7 @@ class spacecraft(object):
 		x_d2 = self.Kinematic_euler(u, self.euler.rot_(x))
 		x = self.euler.state() + delta_t/2*(x_d + x_d2)
 		#print x.shape
-		print x.T
+		#print x.T
 		self.t += delta_t
 		self.euler.update_state(x)
 		self.history.append(self.euler.state())
