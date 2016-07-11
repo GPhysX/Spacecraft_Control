@@ -50,6 +50,7 @@ def main():
   plt.plot(t, theta2)
   plt.show()
 
+
     #print (sc.euler.rot)
 
 
