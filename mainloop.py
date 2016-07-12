@@ -11,8 +11,7 @@ def main():
   sc = spacecraft(euler())  
   att = attitude()
   #print sc.n_orbit()
-
-
+  
   for i in range(0,1000):
     u = att.control(sc.euler, np.matrix([0,0,0]).T)
     sc.Heun(u)

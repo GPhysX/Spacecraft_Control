@@ -1,9 +1,6 @@
 import numpy as np
 from math import *
 
-class pid(object):
-	pass
-
 class attitude(object):  
   def __init__(self, kp_att = np.matrix([0.7,0.7,0.7]).T, 
                 kd_att = np.matrix([5,5,5]).T, 

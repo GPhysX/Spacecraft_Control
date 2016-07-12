@@ -2,7 +2,7 @@
 import numpy as np
 from math import *
 delta_t = 0.01
-Td = np.matrix([0.01,0.01,0.01]).T
+Td = np.matrix([0.0001,0.0001,0.0001]).T
 Tc = np.matrix([0,0,0]).T
 
 class spacecraft(object):
