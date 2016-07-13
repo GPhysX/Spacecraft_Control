@@ -2,8 +2,8 @@ import numpy as np
 from math import *
 
 class attitude(object):  
-  def __init__(self, kp_att = np.matrix([0.7,0.7,0.7]).T, 
-                kd_att = np.matrix([5,5,5]).T, 
+  def __init__(self, kp_att = np.matrix([0.1,0.1,0.1]).T, 
+                kd_att = np.matrix([0.4,0.4,0.4]).T, 
                 kI_att = np.matrix([0.05,0.05,0.05]).T, freq = 100):
     self.kp = kp_att
     self.kd = kd_att
@@ -19,8 +19,9 @@ class attitude(object):
     old = self.error
     self.error = setpoint - att
     self.I += (self.error + old)  / float(self.freq) / 2.0     #trapezoidal integration scheme, O(h2)
-    d = (self.error - old) / float(self.freq)                #finite difference, O(h)
-    r = np.multiply(self.kp, self.error) + np.multiply(self.kd, d) + np.multiply(self.kI, self.I)
+    d = (self.error - old) * float(self.freq)                #finite difference, O(h)
+    r = np.multiply(self.kp, self.error) + np.multiply(self.kd, d) #+ np.multiply(self.kI, self.I)
+    print self.error, r
     return self.rt.control(rot, r)
 
 class rate(object):  
@@ -41,23 +42,29 @@ class rate(object):
     self.I += (self.error + old)  / float(self.freq) / 2.0     #trapezoidal integration scheme, O(h2)
     d = (self.error - old) / float(self.freq)                #finite difference, O(h)
     a = np.multiply(self.kp, self.error) + np.multiply(self.kd, d) + np.multiply(self.kI, self.I)
+    #print setpoint, rot
     return self.acc.control(rot, a)
 
 class acc(object):  
-  def __init__(self, kp_acc = np.matrix([-124.5, -124.5, -0.7]).T, 
-                kd_acc = np.matrix([1240,1240, 7]).T, freq = 100):
+  def __init__(self, kp_acc = np.matrix([124.5, 124.5, 0.7]).T, 
+                kd_acc = np.matrix([12.40,12.40, 0.07]).T, freq = 100):
     self.kp = kp_acc
-    self.kd = kd_acc
+    self.kd = kp_acc * 0.4
     self.freq = freq
     self.error = np.matrix([0,0,0]).T
     self.d = np.matrix([0,0,0]).T
+    self.old = np.matrix([0,0,0]).T
+    self.setpoint = np.matrix([0,0,0]).T
+    self.u = np.matrix([0,0,0]).T
+    self.I = np.matrix([0,0,0]).T
 
   def control(self, rot, setpoint):
-    old = self.d
-    old2 = self.error
-    self.d = (rot - old) / float(self.freq)                #finite difference, O(h)
-    self.error = (self.d - setpoint)
-    dd = (self.error - old2) / float(self.freq)
-    u = np.multiply(self.kp, self.error) + np.multiply(self.kd, dd)
-    return u
+    self.d = (rot - self.old) * self.freq
+    diff = self.setpoint - self.d
+    self.I += diff
+    #print self.d, setpoint
+    self.setpoint = setpoint
+    self.old = rot
+    self.u = np.multiply(self.kp, self.setpoint) + np.multiply(self.I, self.kd)
+    return self.u
 
