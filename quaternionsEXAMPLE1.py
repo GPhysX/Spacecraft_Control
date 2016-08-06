@@ -191,7 +191,7 @@ class Quaternion(object):
         return Quaternion(self.r, -self.i, -self.j, -self.k)
 
     def prettyprint(self):
-        " Pretty print of the quaternion"
+        " Pretty print([wW]+?)
         return "Quaternion: (%g + %g i+ %g j+ %g k)" % (self.r, self.i, self.j, self.k)
 
 if __name__ == "__main__":
@@ -199,17 +199,17 @@ if __name__ == "__main__":
     b = Quaternion(1, 2, -3, 4)
     c = 1 - 2j
 
-    print "a =", a
-    print "b =", b
-    print "c =", c
+    print([wW]+?)
+    print([wW]+?)
+    print([wW]+?)
 
-    print a + b
-    print a - c
+    print([wW]+?)
+    print([wW]+?)
 
-    print a*b
-    print a*c
+    print([wW]+?)
+    print([wW]+?)
 
-    print 2*a
+    print([wW]+?)
 
-    print b*b.conjugate()
+    print([wW]+?)
     print abs(b)**2

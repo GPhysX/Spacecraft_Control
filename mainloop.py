@@ -10,25 +10,25 @@ from pid import *
 def main():
   sc = spacecraft(euler())  
   att = attitude()
-  #print sc.n_orbit()
+  #print([wW]+?)
   
-  for i in range(0,1000):
-    u = att.control(sc.euler, np.matrix([0,0,0]).T)
+  for i in range(0,40):#000):
+    u = att.control(sc.euler, np.matrix([0.,0.,0.]).T)
     sc.Heun(u)
   for i in range(1000,2000):
-    u = att.control(sc.euler, np.matrix([1,0,0]).T)
+    u = att.control(sc.euler, np.matrix([1.,0.,0.]).T)
     sc.Heun(u)
   for i in range(2000,3000):
-    u = att.control(sc.euler, np.matrix([0,1,0]).T)
+    u = att.control(sc.euler, np.matrix([0.,1.,0.]).T)
     sc.Heun(u)
   for i in range(3000,4000):
-    u = att.control(sc.euler, np.matrix([0,-1,1]).T)
+    u = att.control(sc.euler, np.matrix([0.,-1.,1.]).T)
     sc.Heun(u)
   for i in range(4000,4500):
-    u = att.control(sc.euler, np.matrix([0,0,0]).T)
+    u = att.control(sc.euler, np.matrix([0.,0.,0.]).T)
     sc.Heun(u)
   for i in range(4500,6000):
-    u = att.control(sc.euler, np.matrix([-1,-1,-1]).T)
+    u = att.control(sc.euler, np.matrix([-1.,-1.,-1.]).T)
     sc.Heun(u)      
 
   theta1 = []
@@ -43,14 +43,14 @@ def main():
   theta1.append(theta1[-1])
   theta2.append(theta2[-1])
   theta3.append(theta3[-1])
-  plt.axis([0, 60, -3.14, 3.14])
+  plt.axis([0, 60, -pi, pi])
   plt.plot(t, theta1)
   plt.plot(t, theta3)
   plt.plot(t, theta2)
   plt.show()
 
 
-    #print (sc.euler.rot)
+    #print([wW]+?)
 
 
 

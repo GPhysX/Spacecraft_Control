@@ -50,61 +50,64 @@ class spacecraft(object):
 
 
 class euler(object):
-	def __init__(self, theta1 = 0, theta2 = 0, theta3 = 0, theta1_d = 1, theta2_d = 0, theta3_d = 0):
-		self.theta1 = theta1
-		self.theta1_d = theta1_d
-		self.theta2 = theta2
-		self.theta2_d = theta2_d
-		self.theta3 = theta3
-		self.theta3_d = theta3_d
-				
-	def update_attitude(self, att):
-		self.theta1 = att[0]
-		self.theta2 = att[1]
-		self.theta3 = att[2]		
+  def __init__(self, theta1 = 0, theta2 = 0, theta3 = 0, theta1_d = 1, theta2_d = 0, theta3_d = 0):
+    self.theta1 = theta1
+    self.theta1_d = theta1_d
+    self.theta2 = theta2
+    self.theta2_d = theta2_d
+    self.theta3 = theta3
+    self.theta3_d = theta3_d
+        
+  def update_attitude(self, att):
+    self.theta1 = att[0]
+    self.theta2 = att[1]
+    self.theta3 = att[2]    
 
-	def update_rot(self, rot):
-		self.theta1_d = rot[0]
-		self.theta2_d = rot[1]
-		self.theta3_d = rot[2]
-				
-	def OMEGA(self, rot = np.matrix([0,0,0])):
-		if rot.all() == 0:
-			rot = self.rot()
-		return np.matrix([[0, -rot[2], rot[1]],
-			[rot[2], 0, -rot[0]],
-			[-rot[1], rot[0], 0]])
+  def update_rot(self, rot):
+    self.theta1_d = rot[0]
+    self.theta2_d = rot[1]
+    self.theta3_d = rot[2]
+        
+  def OMEGA(self, rot = np.matrix([0,0,0])):
+    if rot.all() == 0:
+      rot = self.rot()
+    return np.matrix([[0, -rot[2], rot[1]],
+      [rot[2], 0, -rot[0]],
+      [-rot[1], rot[0], 0]])
 
-	def N(self):
-		return np.matrix([[1, sin(self.theta1)*tan(self.theta2), cos(self.theta1)*tan(self.theta2)],
-			[0, cos(self.theta1), -sin(self.theta1)],
-			[0, sin(self.theta1)/cos(self.theta2), cos(self.theta1)/cos(self.theta2)]])
+  def N(self):
+    return np.matrix([[1, sin(self.theta1)*tan(self.theta2), cos(self.theta1)*tan(self.theta2)],
+      [0, cos(self.theta1), -sin(self.theta1)],
+      [0, sin(self.theta1)/cos(self.theta2), cos(self.theta1)/cos(self.theta2)]])
 
-	def attitude(self):
-		return np.matrix([self.theta1, self.theta2, self.theta3]).T
+  def attitude(self):
+    return np.matrix([self.theta1, self.theta2, self.theta3]).T
 
-	def rot(self):
-		return np.matrix([self.theta1_d, self.theta2_d, self.theta3_d]).T
+  def rot(self):
+    return np.matrix([self.theta1_d, self.theta2_d, self.theta3_d]).T
 
-	def attitude_(self, state):
-		return np.matrix([state[0][0], state[1][0], state[2][0]]).T
+  def attitude_(self, state):
+    return np.matrix([state[0][0], state[1][0], state[2][0]]).T
 
-	def rot_(self, state):
-		return np.matrix([state[3,0], state[4,0], state[5,0]]).T
-	
-	def state(self):
-		return np.bmat([[self.attitude()], [self.rot()]])
+  def rot_(self, state):
+    return np.matrix([state[3,0], state[4,0], state[5,0]]).T
+  
+  def state(self):
+    return np.bmat([[self.attitude()], [self.rot()]])
 
-	def x(self):
-		return self.state()
+  def x(self):
+    return self.state()
 
-	def update_state(self, state):
-		self.theta1 = state[0,0] % (2 * pi)
-		self.theta2 = state [1,0] % (2 * pi)
-		self.theta3 = state [2,0] % (2 * pi)
-		self.theta1_d = state[3,0]
-		self.theta2_d = state[4,0]
-		self.theta3_d = state[5,0]
+  def update_state(self, state):
+    self.theta1 = state[0,0] % (2 * pi) 
+    self.theta2 = state [1,0] % (2 * pi)
+    self.theta3 = state [2,0] % (2 * pi)
+    if (self.theta1 > pi) : self.theta1 -= (2*pi)
+    if (self.theta2 > pi) : self.theta2 -= (2*pi)
+    if (self.theta3 > pi) : self.theta3 -= (2*pi)
+    self.theta1_d = state[3,0]
+    self.theta2_d = state[4,0]
+    self.theta3_d = state[5,0]
 
 class quaternions(object):
   def __init__(self, q1 = 0, q2 = 0, q3 = 0, q4 = 0):
