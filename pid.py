@@ -6,9 +6,9 @@ class attitude(object):
   def __init__(self, kp_att = np.matrix([1,1,1]).T, 
                 kd_att = np.matrix([0.4,0.4,0.4]).T, 
                 kI_att = np.matrix([0.05,0.05,0.05]).T, freq = 100):
-    self.kp = -3*kp_att
-    self.kd = -3*kd_att
-    self.kI = -10*kI_att
+    self.kp = 10*kp_att
+    self.kd = 10*kd_att
+    self.kI = 10*kI_att
     self.freq = freq
     self.error = np.matrix([0.,0.,0.]).T
     self.I = 0
@@ -22,7 +22,7 @@ class attitude(object):
     self.I += (self.error + old)  / float(self.freq) / 2.0     #trapezoidal integration scheme, O(h2)
     d = (self.error - old) * float(self.freq)                #finite difference, O(h)
     r = np.multiply(self.kp, self.error) + np.multiply(self.kd, d) + np.multiply(self.kI, self.I)
-    print (self.error, os.linesep)#, r, os.linesep)
+    #print (self.error, os.linesep)#, r, os.linesep)
     return self.rt.control(rot, r)
 
 class rate(object):  
@@ -43,7 +43,7 @@ class rate(object):
     self.I += (self.error + old)  / float(self.freq) / 2.0     #trapezoidal integration scheme, O(h2)
     d = (self.error - old) / float(self.freq)                #finite difference, O(h)
     a = np.multiply(self.kp, self.error) + np.multiply(self.kd, d) + np.multiply(self.kI, self.I)
-    #print setpoint, rot
+    print (setpoint, rot, os.linesep)
     return self.acc.control(rot, a)
 
 class acc(object):  
@@ -63,7 +63,6 @@ class acc(object):
     self.d = (rot - self.old) * self.freq
     diff = self.setpoint - self.d
     self.I += diff
-    #print self.d, setpoint
     self.setpoint = setpoint
     self.old = rot
     self.u = np.multiply(self.kp, self.setpoint) + np.multiply(self.I, self.kd)

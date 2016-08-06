@@ -12,7 +12,7 @@ def main():
   att = attitude()
   #print([wW]+?)
   
-  for i in range(0,40):#000):
+  for i in range(0,1000):#000):
     u = att.control(sc.euler, np.matrix([0.,0.,0.]).T)
     sc.Heun(u)
   for i in range(1000,2000):
