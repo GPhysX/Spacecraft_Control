@@ -21,17 +21,17 @@ class attitude(object):
     self.error = setpoint - att
     self.I += (self.error + old)  / float(self.freq) / 2.0     #trapezoidal integration scheme, O(h2)
     d = (self.error - old) * float(self.freq)                #finite difference, O(h)
-    r = np.multiply(self.kp, self.error) + np.multiply(self.kd, d) + np.multiply(self.kI, self.I)
+    r = np.multiply(self.kp, self.error) + np.multiply(self.kd, d) + np.multiply(self.kI, self.I)   # a = kp*p + kd * d + kI * I
     #print (self.error, os.linesep)#, r, os.linesep)
     return self.rt.control(rot, r)
 
 class rate(object):  
   def __init__(self, kp_rate = np.matrix([10, 10, 10]).T, 
                 kd_rate = np.matrix([4,4, 4]).T, 
-                kI_rate = np.matrix([3,3,3]).T, freq = 100):
+                kI_rate = np.matrix([1,1,1]).T, freq = 100):
     self.kp = kp_rate
     self.kd = kd_rate
-    self.kI = 0.1*kI_rate
+#    self.kI = kI_rate
     self.freq = freq
     self.error = np.matrix([0.,0.,0.]).T
     self.I = np.matrix([0.,0,0]).T
@@ -42,15 +42,14 @@ class rate(object):
     self.error = setpoint - rot
     self.I += (self.error + old)  / float(self.freq) / 2.0     #trapezoidal integration scheme, O(h2)
     d = (self.error - old) / float(self.freq)                #finite difference, O(h)
-    a = np.multiply(self.kp, self.error) + np.multiply(self.kd, d) + np.multiply(self.kI, self.I)
-    print (setpoint, rot, os.linesep)
+    a = np.multiply(self.kp, self.error) + np.multiply(self.kd, d)# + np.multiply(self.kI, self.I)   
     return self.acc.control(rot, a)
 
 class acc(object):  
   def __init__(self, kp_acc = np.matrix([124.5, 124.5, 0.7]).T, 
                 kd_acc = np.matrix([12.40,12.40, 0.07]).T, freq = 100):
     self.kp = kp_acc
-    self.kd = kp_acc * 0.4
+    self.kd = kp_acc * 2
     self.freq = freq
     self.error = np.matrix([0.,0.,0.]).T
     self.d = np.matrix([0.,0.,0.]).T
@@ -65,6 +64,6 @@ class acc(object):
     self.I += diff
     self.setpoint = setpoint
     self.old = rot
-    self.u = np.multiply(self.kp, self.setpoint) + np.multiply(self.I, self.kd)
+    self.u = np.multiply(self.kp, self.setpoint)# + np.multiply(self.I, self.kd)
     return self.u
 
