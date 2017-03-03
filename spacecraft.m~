@@ -1,4 +1,4 @@
-classdef spacecraft
+classdef spacecraft < handle
     properties
         theta = zeros(3,1);
         rot = zeros(3,1);
@@ -23,11 +23,7 @@ classdef spacecraft
         od                                  % orbital dynamics
         x_dot                               % state derivative
     end
-    properties (Access = private)
-        
-        h = 0.01;                           % Initial value, will change based on precision
-        max_error = 
-        
+    
     methods
         function x = get.x(self)
             x = [self.theta; self.rot];
@@ -58,25 +54,32 @@ classdef spacecraft
             n = 1/self.orbit;
         end
         function ok = get.ok(self)
-           t = self.theta;
-           ok = self.n/cos(t(2)) * [ sin(t(3)); cos(t(2))*cos(t(3)); sin(t(2))*sin(t(3))];
+           th = self.theta;
+           ok = self.n/cos(th(2)) * [ sin(th(3)); cos(th(2))*cos(th(3)); sin(th(2))*sin(th(3))];
         end
         function od = get.od(self)
-            t = self.theta;
-            od = 3*self.n^2 * [ 0 -cos(t(1))*cos(t(2)) sin(t(1))*cos(t(2)); 
-                cos(t(1))*cos(t(2)) 0 sin(t(2));
-                sin(t(1))*cos(t(2)) -sin(t(2)) 0] * self.J * [
-                -sin(t(2)) sin(t(1))*cos(t(2)) cos(t(1))*cos(t(2))]';
+            th = self.theta;
+            od = 3*self.n^2 * [ 0 -cos(th(1))*cos(th(2)) sin(th(1))*cos(th(2)); 
+                cos(th(1))*cos(th(2)) 0 sin(th(2));
+                sin(th(1))*cos(th(2)) -sin(th(2)) 0] * self.J * [
+                -sin(th(2)) sin(th(1))*cos(th(2)) cos(th(1))*cos(th(2))]';
         end 
         function x_dot = get.x_dot(self)
             x_dot = self.f + self.G*self.u;
-        end        
+        end
         function self = update_x(self, x)
             self.theta = x(1:3);
             self.rot = x(4:6);
         end
-        function self = step(self,dt)
-            
+        function x_d = x_dotx(self, X)
+            sc = spacecraft;
+            sc.update_x(X);
+            x_d = sc.x_dot;
+        end         
+        function self = step(self)
+            X = ode87(self, [0 0.1], self.x);
+            self.update_x(X);
+            self.t = self.t + self.dt;
         end
     end
 end

@@ -1,4 +1,4 @@
-classdef spacecraft
+classdef spacecraft < handle
     properties
         theta = zeros(3,1);
         rot = zeros(3,1);
@@ -22,6 +22,10 @@ classdef spacecraft
         ok                                  % orbital kinematics
         od                                  % orbital dynamics
         x_dot                               % state derivative
+    end
+    properties (SetAccess = private)
+        t = 0;
+        dt = 0.1;
     end
     
     methods
@@ -66,10 +70,23 @@ classdef spacecraft
         end 
         function x_dot = get.x_dot(self)
             x_dot = self.f + self.G*self.u;
-        end        
+        end
         function self = update_x(self, x)
             self.theta = x(1:3);
             self.rot = x(4:6);
         end
+        function x_d = x_dotx(self, X)
+            sc = spacecraft;
+            sc.update_x(X);
+            x_d = sc.x_dot;
+        end         
+        function self = step(self)
+            X = ode87(self, [0 self.dt], self.x);
+            self.update_x(X);
+            self.t = self.t + self.dt;
+        end
+        function xdeg = x2d(self)
+            xdeg = self.x * 180 / pi;
+        end        
     end
 end
