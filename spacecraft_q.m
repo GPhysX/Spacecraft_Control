@@ -27,6 +27,7 @@ classdef spacecraft_q < spacecraft
             f = [0.5 * self.OM_ * self.q; -inv(self.J)*self.OM() * self.J*self.rot ];
         end
         function ok = ok(self)
+            %TODO
             ok = 0;
         end
         function self = update_x(self,x)

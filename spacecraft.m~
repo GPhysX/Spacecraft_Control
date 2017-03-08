@@ -16,7 +16,7 @@ classdef spacecraft < handle
         ode87 = ode87;
     end
     
-    methods
+    methods (Hidden = true)
         function u = u(self)
             u = [self.Td' self.Tc']';
         end
@@ -24,20 +24,17 @@ classdef spacecraft < handle
             %TODO
             n = 1/self.orbit;
         end
+        function ok = ok(self)
+           th = self.theta;
+           ok = self.n/cos(th(2)) * [ sin(th(3)); cos(th(2))*cos(th(3)); sin(th(2))*sin(th(3))];
+        end
+        function x_d = x_dotx(self, x)
+            sc = self;
+            sc.update_x(x);
+            x_d = sc.x_dot;
+        end
         function x = x(self)
             x = [self.theta; self.rot];
-        end
-
-        function self = sim(self)
-            self.step;
-        end    
-        function x2d = x2d(self)
-            x2d = self.x * 180 / pi;
-        end
-        function self = step(self)
-            X = self.ode87.xout(self, [0 self.dt], self.x);
-            self.update_x(X);
-            self.t = self.t + self.dt;
         end
         function cv = cv(self)
             cv = self.H * self.x;
@@ -65,22 +62,16 @@ classdef spacecraft < handle
             self.theta = x(1:3);
             self.rot = x(4:6);
         end
-        function ok = ok(self)
-           th = self.theta;
-           ok = self.n/cos(th(2)) * [sin(th(3)); cos(th(2))*cos(th(3)); sin(th(2))*sin(th(3))];
+        function self = step(self)
+            X = self.ode87.xout(self, [0 self.dt], self.x);
+            self.update_x(X);
+            self.t = self.t + self.dt;
         end
-        function x_d = x_dotx(self, x)
-            sc = self;
-            sc.update_x(x);
-            x_d = sc.x_dot;
+        function self = sim(self)
+            self.step;
+        end    
+        function x2d = x2d(self)
+            x2d = self.x * 180 / pi;
         end
     end
-    methods (Static = true)
-        function d2r = d2r(c)
-            d2r = c*(1/180.*pi);
-        end
-        function r2d = rd2(c)
-            r2d = c * 180 / pi;
-        end        
-    end    
 end
