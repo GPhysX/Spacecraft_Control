@@ -33,6 +33,22 @@ classdef spacecraft_q < spacecraft
         function self = update_x(self,x)
             self.q = x(1:4);
             self.rot = x(5:7);
+            self.theta_ = self.theta;
+        end
+        function Q = Q(self)
+            Q = [0 -self.q(3) self.q(2); self.q(3) 0 -self.q(1); -self.q(2) self.q(1) 0];
+        end
+        function C = C(self)
+            C = (self.q(4)^2 -self.q_'*self.q_) * eye(3) + 2* self.q_ * self.q_' - 2 *self.q(4) *self.Q;
+        end
+        function theta = theta(self)
+            %3-2-1 axis rotation
+            C = self.C;
+            theta = [atan2(C(2,3), C(3,3)); asin(-C(1,3)); atan2(C(1,2),C(1,1))];
+        end
+        function qe = qe(self, qc)
+            qe = [ qc(4) qc(3) -qc(2) -qc(1); -qc(3) qc(4) qc(1) -qc(2);
+                qc(2) -qc(1) qc(4) -qc(3); qc(1) qc(2) qc(3) qc(4)] * self.q;            
         end        
     end
 end

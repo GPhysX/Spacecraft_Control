@@ -1,6 +1,6 @@
 classdef spacecraft < handle
     properties
-        theta = zeros(3,1);
+        theta_ = zeros(3,1);
         rot = zeros(3,1);
         Tc = zeros(3,1);
         t = 0;
@@ -62,7 +62,7 @@ classdef spacecraft < handle
             x_dot = self.f + self.G*self.u;
         end
         function self = update_x(self, x)
-            self.theta = x(1:3);
+            self.theta_ = x(1:3);
             self.rot = x(4:6);
         end
         function ok = ok(self)
@@ -74,12 +74,15 @@ classdef spacecraft < handle
             sc.update_x(x);
             x_d = sc.x_dot;
         end
+        function theta = theta(self)
+            theta = self.theta_;
+        end
     end
     methods (Static = true)
         function d2r = d2r(c)
             d2r = c*(1/180.*pi);
         end
-        function r2d = rd2(c)
+        function r2d = r2d(c)
             r2d = c * 180 / pi;
         end        
     end    

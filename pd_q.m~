@@ -1,17 +1,22 @@
-classdef pd_q < spacecraft_q
+classdef pd_q < pd
     properties
-        zeta = 0.707;
-        kp = [1 1 1]';
-        ref = [0 0 0]';
+        ref_q = [0 0 0 1]'
     end
     methods
-        function self = sim(self)
-            self.control;
-            self.step;
+        function self = setref_d(self, ref)
+            ref = pi/180.*ref;
+            self.ref_q = [  sin(ref(1)/2)*cos(ref(2)/2)*cos(ref(3)/2) - cos(ref(1)/2)*sin(ref(2)/2)*sin(ref(3)/2);
+                            cos(ref(1)/2)*sin(ref(2)/2)*cos(ref(3)/2) - sin(ref(1)/2)*cos(ref(2)/2)*sin(ref(3)/2);
+                cos(ref(1)/2)*cos(ref(2)/2)*sin(ref(3)/2) - sin(ref(1)/2)*sin(ref(2)/2)*cos(ref(3)/2);
+                cos(ref(1)/2)*cos(ref(2)/2)*cos(ref(3)/2) + sin(ref(1)/2)*sin(ref(2)/2)*sin(ref(3)/2)];
+            ref = self.ref_q
         end
-        function self = control(self)
-            Tc = self.kp .* (self.d2q(self.ref) - self.kd.*self.rot;
-            self.Tc = Tc;
+        function error = error(self, x)
+            qc = self.ref_q;            
+            error = [ qc(4) qc(3) -qc(2) -qc(1); -qc(3) qc(4) qc(1) -qc(2);
+                qc(2) -qc(1) qc(4) -qc(3); qc(1) qc(2) qc(3) qc(4)] * x(1:4);
+            error = error(1:3);
+            error = error * 4*pi;
         end
-        
+    end
 end

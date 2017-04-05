@@ -9,8 +9,8 @@ classdef pd
     end
     methods
         function self = control(self, x)
-            self.v = - self.kp .* self.error(x) - self.kd .* x(end-2:end);
-            self.er = self.er + abs(self.error(x));
+            self.v = self.kp .* self.error(x) - self.kd .* x(end-2:end);
+            self.er = self.er + self.error(x);
         end
         function kd = kd(self) %TODO
             kd = 2*self.zeta*sqrt(self.kp.*(ones(1,3)*self.sc.J)');
@@ -24,7 +24,7 @@ classdef pd
             end
         end
         function error = error(self, x)
-            error = x(1:3) - self.ref;
+            error = self.ref - x(1:3);
         end
     end
 end
