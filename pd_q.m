@@ -15,7 +15,7 @@ classdef pd_q < pd
             error = [ qc(4) qc(3) -qc(2) -qc(1); -qc(3) qc(4) qc(1) -qc(2);
                 qc(2) -qc(1) qc(4) -qc(3); qc(1) qc(2) qc(3) qc(4)] * x(1:4);
             error = error(1:3);
-            error = error * 4 * pi;
+            error = error * pi;
         end
     end
 end
