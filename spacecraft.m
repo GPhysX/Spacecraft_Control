@@ -4,6 +4,7 @@ classdef spacecraft < handle
         rot = zeros(3,1);
         Tc = zeros(3,1);
         t = 0;
+        dt = 0.1;
     end
     properties (SetAccess = immutable)
         H = [eye(3) zeros(3)];
@@ -12,7 +13,6 @@ classdef spacecraft < handle
         orbit = 700;
     end
     properties (Access = private)
-        dt = 0.1;
         ode87 = ode87;
     end
     
@@ -55,6 +55,18 @@ classdef spacecraft < handle
                0 cos(th(1)) -sin(th(1));
                0 sin(th(1))/cos(th(2)) cos(th(1))/cos(th(2))];
         end
+        function N_d = N_d(self)
+            th = self.theta;
+            om = self.rot;
+            i1 = cos(th(1))*tan(th(2))*om(1)+ sin(th(1))*om(2)/(cos(th(2))^2);
+            i2 =  -sin(th(1))*tan(th(2))*om(1)+cos(th(1))*om(2)/(cos(th(2))^2);
+            i3 = (cos(th(1))*cos(th(2))*om(1)+sin(th(1))*sin(th(2))*om(2))/(cos(th(2))^2);
+            i4 = (-sin(th(1))*cos(th(2))*om(1)+cos(th(1))*sin(th(2))*om(2))/(cos(th(2))^2);
+            N_d = [0 i1 i2;
+                    0 -sin(th(1))*om(1) -cos(th(1))*om(1);
+                    0  i3 i4];
+        end
+
         function f = f(self)
             f = [self.N*self.rot+self.ok; -inv(self.J)*self.OM() * self.J*self.rot];
         end
@@ -68,6 +80,7 @@ classdef spacecraft < handle
         function ok = ok(self)
            th = self.theta;
            ok = self.n/cos(th(2)) * [sin(th(3)); cos(th(2))*cos(th(3)); sin(th(2))*sin(th(3))];
+           ok = 0;
         end
         function x_d = x_dotx(self, x)
             sc = self;

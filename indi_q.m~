@@ -1,0 +1,14 @@
+classdef indi_q
+    properties
+        u = [0 0 0]';
+        om1 = [0 0 0]';
+        om2 = [0 0 0]';
+    end
+    methods
+        function self = control(self, s, v)            
+            du = s.J * (v-s.rot);
+            self.u = self.u + du;
+        end
+        function self = d_om
+    end
+end

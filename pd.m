@@ -13,7 +13,8 @@ classdef pd
             self.er = self.er + abs(self.error(x));
         end
         function kd = kd(self) %TODO
-            kd = 2*self.zeta*sqrt(self.kp.*3);
+            kd = 4*self.zeta*sqrt(self.kp);
+%             kd = 5*self.kp;
         end
         function self = setref_d(self, ref)
             if size(ref) == size(self.ref)

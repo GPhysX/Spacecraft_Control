@@ -1,29 +1,52 @@
-s = spacecraft_q;
-thetas = zeros(15000,3);
-time = zeros(15000,1);
-c = pd_q;
-i = 0;
-cont = zeros(15000,3);
 commands = {[0 0 0]'; [70 70 70]'; [-70 -70 -70]';[0 0 0]'};
 times = 1*[9.99, 50, 90, 150];
+fig = 1;
+
+%% PD, quaternions
+s = spacecraft_q;
+c = pd_q;
+c.kp = 5 * c.kp;
+run(s, c, commands, times, p, 1, fig);
+
+%% PD, euler
+s = spacecraft;
+c = pd;
+c.kp = 2 * c.kp;
+run(s, c, commands, times, p, 1, fig);
+
+%% NDI, quaternions, no timesep
+s = spacecraft_q;
+c = pd_q;
+c.kp = 10 * c.kp;
+run(s, c, commands, times, ndi_q, 1, fig);
+%% NDI, euler, no timesep
+s = spacecraft;
+c = pd;
+c.kp = 4*c.kp;
+run(s, c, commands, times, ndi, 1, fig);
+
+%% NDI, quaternions, timesep
+s = spacecraft_q;
+c = pd_q;
+c.kp = .4*c.kp;
+run(s, c, commands, 2*times, ndi_q, 10, fig);
+
+%% NDI, euler angles, timesep
+s = spacecraft;
+c = pd;
+c.kp = .05*c.kp;
+run(s, c, commands, 2*times, ndi, 10, fig);
+
+%% INDI, quaternions, timesep
+s = spacecraft_q;
+c = pd_q;
+c.kp = .3 * c.kp;
+run(s, c, commands, 3*times, indi_q, 10, fig);
 
 
-for j = 1:length(times)
-    c = c.setref_d(commands{j});
-    while s.t < times(j)
-        i = i+1;        
-        if mod(i,1) == 0
-            i
-            c = c.control(s.x);            
-        end
-        s.Tc = s.J*c.v + cross(s.rot,s.J*s.rot) - s.Td;         %ndi
-        cont(i,:) = s.Tc;
-        s = s.sim;
-        thetas(i,:) = s.theta';
-        time(i) = s.t;
-    end
-end
+%% INDI, euler angles, timesep
+s = spacecraft;
+c = pd;
+c.kp = .05 * c.kp;
+run(s, c, commands, 3*times, indi, 10, fig);
 
-figure
-plot(time(1:i), thetas(1:i,:))
-c.er
