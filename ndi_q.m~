@@ -1,11 +1,13 @@
-classdef ndi
+classdef ndi_q
     properties
         title = 'NDI';
         u
+        us = zeros(15000,3);
+        i
     end
     methods
         function self = control(self, s, v)
-            self.u = s.J*inv(s.N)*(s.N*v-s.N_d*s.rot) + s.OM*s.J*s.rot - s.Td;
+            self.u = s.J*(v-s.rot) +  s.OM*s.J*s.rot  - s.Td;
         end
     end
 end

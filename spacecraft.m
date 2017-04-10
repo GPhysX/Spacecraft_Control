@@ -9,8 +9,9 @@ classdef spacecraft < handle
     properties (SetAccess = immutable)
         H = [eye(3) zeros(3)];
         Td = [0.0001 0.0001 0.0001]';
-        J = [124.531 0 0; 0 124.53 0; 0 0 0.704];
+        J = [124.531 0 0; 0 124.531 0; 0 0 0.704];
         orbit = 700;
+        orbit_period = 5917.46;
     end
     properties (Access = private)
         ode87 = ode87;
@@ -21,8 +22,8 @@ classdef spacecraft < handle
             u = [self.Td' self.Tc']';
         end
         function n = n(self)
-            %TODO
-            n = 1/self.orbit;
+            %Orbital rate
+            n = 2*pi/self.orbit_period;
         end
         function x = x(self)
             x = [self.theta; self.rot];
@@ -80,7 +81,6 @@ classdef spacecraft < handle
         function ok = ok(self)
            th = self.theta;
            ok = self.n/cos(th(2)) * [sin(th(3)); cos(th(2))*cos(th(3)); sin(th(2))*sin(th(3))];
-           ok = 0;
         end
         function x_d = x_dotx(self, x)
             sc = self;
@@ -98,5 +98,8 @@ classdef spacecraft < handle
         function r2d = r2d(c)
             r2d = c * 180 / pi;
         end        
+        function title = title()
+            title = 'euler angles';
+        end
     end    
 end

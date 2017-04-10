@@ -17,5 +17,8 @@ classdef pd_q < pd
             error = error(1:3);
             error = error;
         end
+        function kd = kd(self) %TODO
+            kd = 4*self.zeta*sqrt(self.kp);
+        end
     end
 end

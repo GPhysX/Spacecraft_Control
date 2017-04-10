@@ -1,5 +1,6 @@
 classdef p
     properties
+        title = 'P';
         u
     end
     methods

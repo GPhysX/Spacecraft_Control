@@ -1,5 +1,6 @@
 classdef indi_q
     properties
+        title = 'INDI';
         u = [0 0 0]';
         om = [0 0 0]';
         alpha = [0 0 0]';

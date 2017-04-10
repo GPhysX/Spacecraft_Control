@@ -1,5 +1,6 @@
 classdef ndi_q
     properties
+        title = 'NDI';
         u
     end
     methods

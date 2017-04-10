@@ -19,7 +19,7 @@ classdef spacecraft_q < spacecraft
             G = [zeros(4,3) zeros(4,3); inv(self.J) inv(self.J)];
         end
         function OM_ = OM_(self)
-            w = self.rot;
+            w = self.rot + self.ok;
             OM_ = [0 w(3) -w(2) w(1); -w(3) 0 w(1) w(2); 
                 w(2) -w(1) 0 w(3); -w(1) -w(2) -w(3) 0];
         end
@@ -27,8 +27,7 @@ classdef spacecraft_q < spacecraft
             f = [0.5 * self.OM_ * self.q; -inv(self.J)*self.OM() * self.J*self.rot ];
         end
         function ok = ok(self)
-            %TODO
-            ok = 0;
+            ok =  [0 self.n 0]';
         end
         function self = update_x(self,x)
             self.q = x(1:4);
@@ -49,6 +48,11 @@ classdef spacecraft_q < spacecraft
         function qe = qe(self, qc)
             qe = [ qc(4) qc(3) -qc(2) -qc(1); -qc(3) qc(4) qc(1) -qc(2);
                 qc(2) -qc(1) qc(4) -qc(3); qc(1) qc(2) qc(3) qc(4)] * self.q;            
-        end        
+        end
+    end
+    methods (Static = true)
+        function title = title()
+            title = 'quaternions';       
+        end
     end
 end

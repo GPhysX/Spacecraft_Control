@@ -1,7 +1,7 @@
 classdef pd 
     properties
         zeta = 0.707;
-        kp = 1*[1 1 1]'; %TODO
+        kp = 1*[1 1 1]'; 
         ref = [0 0 0]'; 
         v = [0 0 0]';
         sc = spacecraft;
@@ -13,7 +13,7 @@ classdef pd
             self.er = self.er + abs(self.error(x));
         end
         function kd = kd(self) %TODO
-            kd = 4*self.zeta*sqrt(self.kp);
+            kd = 5*sqrt(self.kp);
 %             kd = 5*self.kp;
         end
         function self = setref_d(self, ref)
