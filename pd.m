@@ -15,6 +15,7 @@ classdef pd
         function kd = kd(self) %TODO
             kd = 5*sqrt(self.kp);
 %             kd = 5*self.kp;
+%               kd = .98*self.kp;  
         end
         function self = setref_d(self, ref)
             if size(ref) == size(self.ref)

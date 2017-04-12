@@ -17,15 +17,15 @@ run(s, c, commands, times, p, 10, fig);
 
 %% NDI, quaternions, no timesep
 s = spacecraft_q;
-s.dt = 0.1;
+s.dt = 0.01;
 c = pd_q;
 c.kp = 10 * c.kp;
-run(s, c, commands, times, ndi_q, 1, fig);
+run(s, c, commands, times, ndi_q, 10, fig);
 %% NDI, euler, no timesep
 s = spacecraft;
 s.dt = 0.1;
 c = pd;
-c.kp = 5*c.kp;
+c.kp = 3*c.kp;
 run(s, c, commands, times, ndi, 1, fig);
 
 %% NDI, quaternions, timesep

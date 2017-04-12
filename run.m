@@ -31,7 +31,7 @@ function [time, thetas, cont, c] = run(s, c, commands, times, c2, timesep, figur
             s = s.sim;
             thetas(i,:) = 180/pi*s.theta';
             time(i) = s.t;
-            if abs(max(s.rot)) > 100
+            if abs(max(s.rot)) > 2*pi/s.dt              % > one revolution/simulation step
                 disp 'unstable'
                 return
             end
@@ -50,8 +50,8 @@ function [time, thetas, cont, c] = run(s, c, commands, times, c2, timesep, figur
     else
         title1
         title2
-        error = sum(e2)
-        control_in = sum(cont)
+        error = sum(sum(abs(e2)))
+        control_in = sum(sum(abs(cont)))
     end
 %     figure
 %     plot(time(1:i), c2.us(1:i,:))
