@@ -16,7 +16,7 @@ classdef pd
         function kd = kd(self) %TODO
 %             kd = [sqrt((self.kp(1)*self.kp(3))/self.sc.J(1,1)/self.sc.J(3,3));
                 
-            kd = 5*self.kp;
+            kd = 1.5*self.kp;
 %               kd = .98*self.kp;  
         end
         function self = setref_d(self, ref)

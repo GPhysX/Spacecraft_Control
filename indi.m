@@ -13,7 +13,7 @@ classdef indi
         end
         function self = d_om(self, s)
             self.alpha;
-            self.alpha = (s.rot - self.om)/s.dt;
+            self.alpha = (s.rot - self.om)/s.Ts;
             self.om = s.rot;
         end
             
