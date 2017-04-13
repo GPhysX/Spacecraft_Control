@@ -6,13 +6,13 @@
 % initialization: disturbance are set to 0, dt is increased to speed up the sim
 s = spacecraft;
 s.Td = [0 0 0]';
-s.Ts = 2.5;
-% simulate until an entire orbital period has passed.
-while s.t < 5917.5
+s.Ts = 1.25;
+% simulate until 1/8th an orbit period has passed (to stay out of any singularities).
+while s.t < s.orbit_period/8
     s = s.sim;
 end
 % Test whether the rotation matches the expectation
-if s.x_(2) > 2*pi
+if s.x_(2) > pi/4
     disp 'No initial rotation'
     s.theta
     disp 'succes'
@@ -23,10 +23,10 @@ s = spacecraft;
 s.Td = [0 0 0]';
 s = s.update_x([0 0 pi/2 0 0 0]');
 s.Ts = 10;
-while s.t < 3000
+while s.t < s.orbit_period/8
     s = s.sim;
 end
-if s.x_(1) > pi
+if s.x_(1) > pi/4
     disp 'Initial rotation around z'
     s.theta
     disp 'succes'

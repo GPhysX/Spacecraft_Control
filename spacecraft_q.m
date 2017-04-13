@@ -18,16 +18,17 @@ classdef spacecraft_q < spacecraft
         function G = G(self)
             G = [zeros(4,3) zeros(4,3); inv(self.J) inv(self.J)];
         end
-        function OM_ = OM_(self)
+        function OM_q = OM_q(self)
             w = self.rot + self.ok;
-            OM_ = [0 w(3) -w(2) w(1); -w(3) 0 w(1) w(2); 
+            OM_q = [0 w(3) -w(2) w(1); -w(3) 0 w(1) w(2); 
                 w(2) -w(1) 0 w(3); -w(1) -w(2) -w(3) 0];
         end
         function f = f(self)
-            f = [0.5 * self.OM_ * self.q; -inv(self.J)*self.OM() * self.J*self.rot ];
+            f = [0.5 * self.OM_q * self.q; -inv(self.J)*self.OM() * self.J*self.rot ];
         end
         function ok = ok(self)
-            ok =  [0 self.n 0]';
+            C = self.C;            
+            ok =  self.n*[C(1,2) C(2,2) C(3,2)]';
         end
         function self = update_x(self,x)
             self.q = x(1:4);
@@ -48,6 +49,12 @@ classdef spacecraft_q < spacecraft
         function qe = qe(self, qc)
             qe = [ qc(4) qc(3) -qc(2) -qc(1); -qc(3) qc(4) qc(1) -qc(2);
                 qc(2) -qc(1) qc(4) -qc(3); qc(1) qc(2) qc(3) qc(4)] * self.q;            
+        end
+        function self = set_orient_r(self, theta)
+            self.q = [  sin(theta(1)/2)*cos(theta(2)/2)*cos(theta(3)/2) - cos(theta(1)/2)*sin(theta(2)/2)*sin(theta(3)/2);
+                cos(theta(1)/2)*sin(theta(2)/2)*cos(theta(3)/2) + sin(theta(1)/2)*cos(theta(2)/2)*sin(theta(3)/2);
+                cos(theta(1)/2)*cos(theta(2)/2)*sin(theta(3)/2) - sin(theta(1)/2)*sin(theta(2)/2)*cos(theta(3)/2);
+                cos(theta(1)/2)*cos(theta(2)/2)*cos(theta(3)/2) + sin(theta(1)/2)*sin(theta(2)/2)*sin(theta(3)/2)];
         end
     end
     methods (Static = true)

@@ -90,21 +90,25 @@ classdef ode87 < handle
                      Error_step = eps*10.0;
                   end;
                   self.h_ = min(hmax, 0.9*self.h_*(tau/Error_step)^self.pow);
-                  if (abs(self.h_) <= hmin) 
+                  if (abs(self.h_) <= eps) 
                      if reject == 0
                         disp('Warning!!! ode87. Step is very small!!!');
-                        self.h_ = hmin;
+                        self.h_ = eps * 100;
                         return
                      else
                         disp('Error in ode87. Step is too small.');
                         return; 
                      end;
-                  end;                  
-               end;
+                  end;
+                  
+
+              end;
+
                if (t < tfinal)
                   disp('Error in ODE87...')
                   disp(t);
                end;
+% 
 %               if haveoutfun
 %                  feval(outfun,t,x,'done',varargin{:});
 %               end;

@@ -1,0 +1,15 @@
+s = spacecraft;
+x0 = s.x;
+s.Td = [0 0 0]';
+Gamma = s.G;
+Phi = zeros(length(s.x),length(s.x));
+for i  = 1:length(s.x)
+    x = x0;
+    x(i) = x(i) + 0.1;
+    s = s.update_x(x);
+    Phi(i,:) = s.f * 10;
+end
+Phi
+Gamma
+
+sys = ss(Phi, Gamma, [eye(3) zeros(3,3)], 0, 0.1);

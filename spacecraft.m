@@ -31,7 +31,7 @@ classdef spacecraft < handle
             G = [zeros(3) zeros(3); inv(self.J) inv(self.J)];
         end
         function f = f(self)
-            f = [self.N*self.rot+self.ok; -inv(self.J) * self.OM() * self.J*self.rot];
+            f = [self.N*self.rot+0*self.ok; -inv(self.J) * self.OM() * self.J*self.rot];
         end
         function OM = OM(self)
             omega = self.rot;
@@ -80,7 +80,7 @@ classdef spacecraft < handle
                     0  i3 i4];
         end
         function self = update_x(self, x)
-            self.theta_ = x(1:3);
+            self.theta_ = mod(x(1:3)+pi,2*pi)-pi;     % normalized to angles between -pi,pi
             self.rot = x(4:6);
         end
         function ok = ok(self)

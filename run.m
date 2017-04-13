@@ -31,14 +31,14 @@ function [time, thetas, cont, c] = run(s, c, commands, times, c2, timesep, figur
             s = s.sim;
             thetas(i,:) = 180/pi*s.theta';
             time(i) = s.t;
-            if abs(max(s.rot)) > 2*pi/s.dt              % > one revolution/simulation step
+            if abs(max(s.rot)) > 2*pi/s.Ts              % > one revolution/simulation step
                 disp 'unstable'
                 return
             end
         end
     end
     title1 = string(strcat({'Response of spacecraft in '}, s.title, {' with '}, c2.title, {' controller.'}));
-    title2 = strcat({'dt = '},  string(s.dt), {'; time seperation factor = '}, string(ts));
+    title2 = strcat({'Ts = '},  string(s.Ts), {'; time seperation factor = '}, string(ts));
 
     if figureflg
         figure
