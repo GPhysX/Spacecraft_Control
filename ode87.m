@@ -20,7 +20,7 @@ classdef ode87 < handle
 
          b_7 = [ 13451932/455176623, 0, 0, 0, 0, -808719846/976000145, 1757004468/5645159321, 656045339/265891186,   -3867574721/1518517206,   465885868/322736535,  53011238/667516719,                  2/45,    0]';
         %  A relative error tolerance that applies to all components of the solution vector. 
-        tol = 1.e-6;
+        tol = 1.e-5;
 
         pow = 1/8; % power for step control
     end
@@ -30,7 +30,7 @@ classdef ode87 < handle
     methods
         function xout = xout(self, spacecraft,tspan)
             % Maximal step size
-            hmax=(tspan(2) - tspan(1))/2.5;
+            hmax=(tspan(2) - tspan(1));
             % Initialization
             nstep = 0;
             t0 = tspan(1);
@@ -92,7 +92,7 @@ classdef ode87 < handle
                   self.h_ = min(hmax, 0.9*self.h_*(tau/Error_step)^self.pow);
                   if (abs(self.h_) <= hmin) 
                      if reject == 0
-                        disp('Warning!!! ode87. Step is very small!!!');
+%                         disp('Warning!!! ode87. Step is very small!!!');
                         self.h_ = hmin;
                         return
                      else
