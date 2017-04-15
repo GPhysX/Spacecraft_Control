@@ -4,8 +4,9 @@ classdef pd_q < pd
     end
     methods
         function self = control(self, x)
-            self.v = - self.kp .* self.error(x) - self.kd .* x(end-2:end);
-%             self.v = - self.kp .* self.error(x) - self.kd .* (self.error(x)-self.er)/self.sc.Ts;
+%             self.v = - self.kp .* self.error(x) - self.kd .* x(end-2:end);
+% %             self.v = - self.kp .* self.error(x) - self.kd .* (self.error(x)-self.er)/self.sc.Ts;
+            self.v = self.kp*5*(0.97*self.er - self.error(x))+0.08*self.v;
             self.er = self.error(x);
         end        
         function self = setref_d(self, ref)
@@ -23,7 +24,7 @@ classdef pd_q < pd
             error = error;
         end
         function kd = kd(self)
-            kd = 3 *self.kp / 2 /pi;
+            kd = 3 *self.kp;
         end
     end
 end

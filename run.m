@@ -44,8 +44,8 @@ function [time, thetas, cont, c] = run(s, c, commands, times, c2, timesep, figur
         figure
         plot(time(1:i), thetas(1:i,:))
         title({title1;title2});
-        xlabel('Angle (degrees)');
-        ylabel('Time (seconds)');
+        ylabel('Angle (degrees)');
+        xlabel('Time (seconds)');
         legend('theta1', 'theta2', 'theta3');
     else
         title1

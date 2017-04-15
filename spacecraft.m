@@ -1,6 +1,6 @@
 classdef spacecraft < handle
     properties
-        theta_ = zeros(3,1);
+        theta_ = 30/180*pi*ones(3,1);
         rot = zeros(3,1);
         Tc = zeros(3,1);
         t = 0;
