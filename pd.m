@@ -9,11 +9,7 @@ classdef pd
     end
     methods
         function self = control(self, x)
-%             self.v = - self.kp .* self.error(x) - self.kd .* x(end-2:end);
-%             self.v = - self.kp .* self.error(x) - self.kd .* (self.error(x)-self.er)/self.sc.Ts;
-%             self.v = -10* (self.er - 0.995*self.error(x));
-            self.v = self.kp*5*(0.98*self.er - self.error(x))+0.15*self.v;
-%             self.v = self.er - 0.99*self.error(x));
+            self.v = self.kp*5*(0.99*self.er - self.error(x))+0.15*self.v;
             self.er = self.error(x);
         end
         function kd = kd(self)

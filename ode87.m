@@ -28,6 +28,9 @@ classdef ode87 < handle
         h_ = 0.05       % initial guess
     end
     methods
+        function self = ode87(prec)
+            self.tol = prec;
+        end
         function xout = xout(self, spacecraft,tspan)
             % Maximal step size
             hmax=(tspan(2) - tspan(1));
@@ -37,7 +40,7 @@ classdef ode87 < handle
             tfinal = tspan(2);
             t = t0;
             % Minimal step size
-            hmin = hmax/10;
+            hmin = hmax/100;
 
             % constant for step rejection
             reject = 0;

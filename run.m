@@ -1,9 +1,10 @@
-function [time, thetas, cont, c] = run(s, c, commands, times, c2, timesep, figureflg)
+function [s, c, c2] = run(s, c, commands, times, c2, timesep, figureflg)
     i = 0;
     k = 0;
     cont = zeros(15000,3);
     thetas = zeros(15000,3);
     time = zeros(15000,1);
+    q_s = zeros(15000,4);
     e1 = zeros(15000,3);
     e2 = zeros(15000,3);
     
@@ -28,8 +29,11 @@ function [time, thetas, cont, c] = run(s, c, commands, times, c2, timesep, figur
             c2 = c2.control(s, c.v);
             s.Tc = c2.u;
             cont(i,:) = s.Tc;
-            s = s.sim;
+            s = s.step;
             thetas(i,:) = 180/pi*s.theta';
+            if exist('s.q')
+                q_s(i,:) = s.q';
+            end
             time(i) = s.t;
             if abs(max(s.rot)) > 2*pi/s.Ts              % > one revolution/simulation step
                 disp 'unstable'
@@ -47,6 +51,14 @@ function [time, thetas, cont, c] = run(s, c, commands, times, c2, timesep, figur
         ylabel('Angle (degrees)');
         xlabel('Time (seconds)');
         legend('theta1', 'theta2', 'theta3');
+        if exist('s.q')
+            figure
+            plot(time(1:i), q_s(1:i,:))
+            title({title1;title2});
+            ylabel('Quaternion');
+            xlabel('Time (seconds)');
+            legend('q1', 'q2', 'q3', 'q4', 'ref1', 'ref2', 'ref3', 'ref4');
+        end
     else
         title1
         title2

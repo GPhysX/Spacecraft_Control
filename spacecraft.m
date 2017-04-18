@@ -14,7 +14,7 @@ classdef spacecraft < handle
         orbit_period = 5917.46;
     end
     properties (Access = private)
-        ode87 = ode87;
+        ode87 = ode87(1.e-4);
     end
     
     methods
@@ -59,7 +59,7 @@ classdef spacecraft < handle
             x = self.x;
             y = x(i);
         end
-        function self = sim(self)
+        function self = simit(self)
             self.step;
         end    
         function x2d = x2d(self)
@@ -70,13 +70,14 @@ classdef spacecraft < handle
         end
         function N_d = N_d(self)
             th = self.theta;
-            om = self.rot;
-            i1 = cos(th(1))*tan(th(2))*om(1)+ sin(th(1))*om(2)/(cos(th(2))^2);
-            i2 =  -sin(th(1))*tan(th(2))*om(1)+cos(th(1))*om(2)/(cos(th(2))^2);
-            i3 = (cos(th(1))*cos(th(2))*om(1)+sin(th(1))*sin(th(2))*om(2))/(cos(th(2))^2);
-            i4 = (-sin(th(1))*cos(th(2))*om(1)+cos(th(1))*sin(th(2))*om(2))/(cos(th(2))^2);
+            f = self.f;
+            theta_d = f(1:3);
+            i1 = cos(th(1))*tan(th(2))*theta_d(1)+ sin(th(1))*theta_d(2)/(cos(th(2))^2);
+            i2 =  -sin(th(1))*tan(th(2))*theta_d(1)+cos(th(1))*theta_d(2)/(cos(th(2))^2);
+            i3 = (cos(th(1))*cos(th(2))*theta_d(1)+sin(th(1))*sin(th(2))*theta_d(2))/(cos(th(2))^2);
+            i4 = (-sin(th(1))*cos(th(2))*theta_d(1)+cos(th(1))*sin(th(2))*theta_d(2))/(cos(th(2))^2);
             N_d = [0 i1 i2;
-                    0 -sin(th(1))*om(1) -cos(th(1))*om(1);
+                    0 -sin(th(1))*theta_d(1) -cos(th(1))*theta_d(1);
                     0  i3 i4];
         end
         function self = update_x(self, x)

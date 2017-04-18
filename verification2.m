@@ -1,11 +1,11 @@
 %% Test for single rotation around orbit
-% initialization: disturbance are set to 0, dt is increased to speed up the sim
+% initialization: disturbance are set to 0, dt is increased to speed up the step
 s = spacecraft_q;
 s.Td = [0 0 0]';
 s.Ts = 1.25;
 % simulate until 1/8th an orbit period has passed.
 while s.t < s.orbit_period/8
-    s = s.sim;
+    s = s.step;
 end
 % Test whether the rotation matches the expectation
 if s.theta_(2) > pi/4
@@ -19,7 +19,7 @@ s.Td = [0 0 0]';
 s = s.set_orient_r([0 0 pi/2]');
 s.Ts = 10;
 while s.t < s.orbit_period/8
-    s = s.sim;
+    s = s.step;
 end
 if s.theta_(1) > pi/4
     disp 'Initial rotation around z'
@@ -34,8 +34,8 @@ sq.Td = [0 0 0]';
 s = s.update_x([0 0 0 1 0 0]');
 sq = s.update_x([0 0 0 1 1 0 0]');
 while s.t < pi
-    s = s.sim;
-    sq = sq.sim;
+    s = s.step;
+    sq = sq.step;
 end
 
 if max(abs(sq.theta - s.theta)) < 1.e-5
@@ -51,8 +51,8 @@ sq.Td = [0 0 0]';
 s = s.update_x([0 0 0 0 1 0]');
 sq = s.update_x([0 0 0 1 0 1 0 ]');
 while s.t < 10
-    s = s.sim;
-    sq = sq.sim;
+    s = s.step;
+    sq = sq.step;
 end
 
 if max(abs(sq.theta - s.theta)) < 1.e-5
@@ -66,8 +66,8 @@ s = spacecraft;
 s.Td = [1 1 1]';
 sq.Td = [1 1 1]';
 while s.t < 10
-    s = s.sim;
-    sq = sq.sim;
+    s = s.step;
+    sq = sq.step;
 end
 if max(abs(sq.theta - s.theta)) < 1.e-5
     disp 'Disturbance around all axes'

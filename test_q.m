@@ -25,12 +25,13 @@ run(sc, c, commands, times, ndi_q, 1, fig);
 sc = spacecraft;
 sc.Ts = 0.1;
 c = pd;
-c.kp = 2;
+% c.kp = 2;
 run(sc, c, commands, times, ndi, 1, fig);
 
 %% NDI, quaternions, timesep
 sc = spacecraft_q;
 c = pd_q;
+% c.kp = 2*pi*c.kp;
 sc.Ts = 0.01;
 run(sc, c, commands, times, ndi_q, 10, fig);
 
@@ -51,4 +52,5 @@ run(sc, c, commands, times, indi_q, 10, fig);
 sc = spacecraft;
 sc.Ts = 0.01;
 c = pd;
-run(sc, c, commands, times, indi, 10, fig);
+% c.kp = c.kp*0.5;
+[sc_, c_, indi_] = run(sc, c, commands, times, indi, 10, fig);
