@@ -5,15 +5,17 @@ classdef pd
         ref = [0 0 0]'; 
         v = [0 0 0]';
         sc = spacecraft;
-        er = [0 0 0]';
+        er1 = [0 0 0]';
+        er2 = [0 0 0]';
     end
     methods
-        function self = control(self, x)
-            self.v = self.kp*5*(0.99*self.er - self.error(x))+0.15*self.v;
-            self.er = self.error(x);
+        function self = control(self, x, s)
+            self.v = self.kp*5*(0.99*self.er1 - self.error(x));
+            self.er2 = self.er1;
+            self.er1 = self.error(x);
         end
         function kd = kd(self)
-            kd = 4*self.kp;
+            kd = sqrt(self.kp);
         end
         function self = setref_d(self, ref)
             self.ref = pi/180*ref;

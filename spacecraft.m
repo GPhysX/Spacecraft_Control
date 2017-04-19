@@ -14,7 +14,7 @@ classdef spacecraft < handle
         orbit_period = 5917.46;
     end
     properties (Access = private)
-        ode87 = ode87(1.e-4);
+        ode87 = ode87(1.e-2);
     end
     
     methods

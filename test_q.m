@@ -17,9 +17,9 @@ run(sc, c, commands, times, p, 1, fig);
 
 %% NDI, quaternions, no timesep
 sc = spacecraft_q;
-sc.Ts = 0.1;
+% sc.Ts = 0.1;
 c = pd_q;
-c.kp = 4*pi * c.kp;
+c.kp = 2*pi * c.kp;
 run(sc, c, commands, times, ndi_q, 1, fig);
 %% NDI, euler, no timesep
 sc = spacecraft;
@@ -31,7 +31,7 @@ run(sc, c, commands, times, ndi, 1, fig);
 %% NDI, quaternions, timesep
 sc = spacecraft_q;
 c = pd_q;
-% c.kp = 2*pi*c.kp;
+c.kp = 2*pi*c.kp;
 sc.Ts = 0.01;
 run(sc, c, commands, times, ndi_q, 10, fig);
 
@@ -45,7 +45,7 @@ run(sc, c, commands, times, ndi, 10, fig);
 sc = spacecraft_q;
 sc.Ts = 0.01;
 c = pd_q;
-c.kp = c.kp;
+c.kp = 2*pi*c.kp;
 run(sc, c, commands, times, indi_q, 10, fig);
 
 %% INDI, euler angles, timesep

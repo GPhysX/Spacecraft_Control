@@ -1,4 +1,4 @@
-function [s, c, c2] = run(s, c, commands, times, c2, timesep, figureflg)
+function [s, c, c2, time] = run(s, c, commands, times, c2, timesep, figureflg)
     i = 0;
     k = 0;
     cont = zeros(15000,3);
@@ -22,7 +22,7 @@ function [s, c, c2] = run(s, c, commands, times, c2, timesep, figureflg)
                 e1(i,:) = c.v - s.rot;
                 i;
                 s.theta * 180 / pi;
-                c = c.control(s.x);            
+                c = c.control(s.x, s);            
             end
             k = k + 1;
             e2(k,:) = 180/pi*s.theta'- [1 1 1]*commands{j};
