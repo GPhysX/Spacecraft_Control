@@ -5,7 +5,7 @@ fig = 1;
 %% PD, quaternions
 sc = spacecraft_q;
 c = pd_q;
-c.kp = 0.1*c.kp;
+% c.kp = 0.1*c.kp;
 run(sc, c, commands, times, p, 1, fig);
 
 %% PD, euler
@@ -40,7 +40,7 @@ sc = spacecraft;
 c = pd;
 sc.Ts = 0.01;
 run(sc, c, commands, times, ndi, 10, fig);
-
+ 
 %% INDI, quaternions, timesep
 sc = spacecraft_q;
 sc.Ts = 0.01;
@@ -52,5 +52,5 @@ run(sc, c, commands, times, indi_q, 10, fig);
 sc = spacecraft;
 sc.Ts = 0.01;
 c = pd;
-% c.kp = c.kp*0.5;
+c.kp = c.kp*0.1;
 [sc_, c_, indi_] = run(sc, c, commands, times, indi, 10, fig);

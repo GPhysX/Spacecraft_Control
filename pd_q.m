@@ -8,7 +8,6 @@ classdef pd_q < pd
 %             self.v = self.kp*5*(0.99*self.er - self.error(x))+0.15*self.v;
 %             self.v = self.kp*5*(0.97*self.er - self.error(x))+0.08*self.v;
 %             3.9618 (z-0.9976) (z-0.9982)
-            self.er2 = self.er1;
             self.er1 = self.error(x);
         end        
         function self = setref_d(self, ref)

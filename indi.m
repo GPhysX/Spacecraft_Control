@@ -7,8 +7,8 @@ classdef indi
     end
     methods
         function self = control(self, s, v)
-            self = self.d_th(s);
-            du = s.J*inv(s.N)*(v-s.N_d*s.rot);
+            self = self.d_th(s);            
+            du = s.J*inv(s.N)*(v-self.alpha);
             self.u = self.u + du;
         end
         function self = d_th(self, s)
