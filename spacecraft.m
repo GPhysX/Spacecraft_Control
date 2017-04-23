@@ -5,7 +5,7 @@ classdef spacecraft < handle
         Tc = zeros(3,1);
         t = 0;
         Ts = 0.1;
-        Td = [0.0001 0.0001 0.0001]';        
+        Td = [0.0001 0.0001 0.0001]'; 
     end
     properties (SetAccess = immutable)
         H = [eye(3) zeros(3)];
@@ -106,7 +106,7 @@ classdef spacecraft < handle
             r2d = c * 180 / pi;
         end        
         function title = title()
-            title = 'euler angles';
+            title = 'euler_angles';
         end
     end    
 end

@@ -6,6 +6,10 @@ classdef spacecraft_q < spacecraft
         H_ = [[eye(3);zeros(1,3)] zeros(4)];
     end
     methods
+        function self = spacecraft_q(self)
+            th0 = 30/180*pi;
+            self = self.set_orient_r([th0 th0 th0]);
+        end
         function q_ = q_(self)
             q_ = self.q(1:3);
         end

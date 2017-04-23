@@ -1,4 +1,4 @@
-function [s, c, c2, time] = run(s, c, commands, times, c2, timesep, figureflg)
+function [sc, c, c2, time] = run(sc, c, commands, times, c2, timesep, figureflg)
     i = 0;
     k = 0;
     cont = zeros(15000,3);
@@ -16,33 +16,33 @@ function [s, c, c2, time] = run(s, c, commands, times, c2, timesep, figureflg)
     
     for j = 1:length(times)
         c = c.setref_d(commands{j});
-        while s.t < times(j)
+        while sc.t < times(j)
             i = i+1;        
             if mod(i,ts) == 0
-                e1(i,:) = c.v - s.rot;
+                e1(i,:) = c.v - sc.rot;
                 i;
-                s.theta * 180 / pi;
-                c = c.control(s.x, s);            
+                sc.theta * 180 / pi;
+                c = c.control(sc.x, sc);            
             end
             k = k + 1;
-            e2(k,:) = 180/pi*s.theta'- [1 1 1]*commands{j};
-            c2 = c2.control(s, c.v);
-            s.Tc = c2.u;
-            cont(i,:) = s.Tc;
-            s = s.step;
-            thetas(i,:) = 180/pi*s.theta';
-            if exist('s.q')
-                q_s(i,:) = s.q';
+            e2(k,:) = 180/pi*sc.theta'- [1 1 1]*commands{j};
+            c2 = c2.control(sc, c.v);
+            sc.Tc = c2.u;
+            cont(i,:) = sc.Tc;
+            sc = sc.step;
+            thetas(i,:) = 180/pi*sc.theta';
+            if isprop(sc,'q')
+                q_s(i,:) = sc.q';
             end
-            time(i) = s.t;
-            if abs(max(s.rot)) > 2*pi/s.Ts              % > one revolution/simulation step
+            time(i) = sc.t;
+            if abs(max(sc.rot)) > 2*pi/sc.Ts              % > one revolution/simulation step
                 disp 'unstable'
                 return
             end
         end
     end
-    title1 = string(strcat({'Response of spacecraft in '}, s.title, {' with '}, c2.title, {' controller.'}));
-    title2 = strcat({'Ts = '},  string(s.Ts), {'; time seperation factor = '}, string(ts));
+    title1 = string(strcat({'Response of spacecraft in '}, sc.title, {' with '}, c2.title, {' controller.'}));
+    title2 = strcat({'Ts = '},  string(sc.Ts), {'; time seperation factor = '}, string(ts));
 
     if figureflg
         figure
@@ -51,13 +51,15 @@ function [s, c, c2, time] = run(s, c, commands, times, c2, timesep, figureflg)
         ylabel('Angle (degrees)');
         xlabel('Time (seconds)');
         legend('theta1', 'theta2', 'theta3');
-        if exist('s.q')
+        saveas(gcf,strcat('./report/img/', c2.title, '_', int2str(timesep), sc.title, '.png'))
+        if isprop(sc,'q')
             figure
             plot(time(1:i), q_s(1:i,:))
             title({title1;title2});
             ylabel('Quaternion');
             xlabel('Time (seconds)');
             legend('q1', 'q2', 'q3', 'q4', 'ref1', 'ref2', 'ref3', 'ref4');
+            saveas(gcf,strcat('./report/img/','q_', c2.title, '_', int2str(timesep), sc.title, '.png'))
         end
     else
         title1
