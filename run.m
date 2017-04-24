@@ -35,7 +35,7 @@ function [sc, c, c2, time] = run(sc, c, commands, times, c2, timesep, figureflg)
                 q_s(i,:) = sc.q';
             end
             time(i) = sc.t;
-            if abs(max(sc.rot)) > 2*pi/sc.Ts              % > one revolution/simulation step
+            if max(abs(sc.rot)) > 2*pi/sc.Ts              % > one revolution/simulation step
                 disp 'unstable'
                 return
             end

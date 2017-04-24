@@ -5,7 +5,7 @@ classdef ndi_q
     end
     methods
         function self = control(self, s, v)
-            self.u = s.J*(v-s.rot) +  s.OM*s.J*s.rot  - s.Td;
+            self.u = s.J*(v) +  s.OM*s.J*s.rot  - s.Td;
         end
     end
 end

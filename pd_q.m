@@ -5,6 +5,8 @@ classdef pd_q < pd
     methods
         function self = control(self, x, s)
             self.v = -self.kp*self.error(x) - self.kd * s.rot;
+%             self.v =   -6.6337* (self.error(x)-0.9942*self.er1(:,1));
+
 %             self.v = self.kp*5*(0.99*self.er - self.error(x))+0.15*self.v;
 %             self.v = self.kp*5*(0.97*self.er - self.error(x))+0.08*self.v;
 %             3.9618 (z-0.9976) (z-0.9982)
@@ -25,7 +27,7 @@ classdef pd_q < pd
             error = error;
         end
         function kd = kd(self)
-            kd = 2 * sqrt(self.kp);
+            kd = 3 * sqrt(self.kp);
         end
     end
 end

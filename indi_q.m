@@ -7,9 +7,6 @@ classdef indi_q
     end
     methods
         function self = control(self, s, v)
-%             qd = -.5 * s.Q * s.rot;
-%             du = s.J*(v-s.rot) +  s.OM*s.J*s.rot;
-%             a = (v-s.rot);
             self = self.d_om(s);
             du = s.J * (v-self.alpha);
             self.u = self.u + du;

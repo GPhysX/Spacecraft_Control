@@ -55,5 +55,10 @@ c = pd;
 % c.kp = c.kp*0.1;
 run(sc, c, commands, times, indi, 10, fig);
 
+%% NDI, euler angles, fractional
+sc = spacecraft;
+sc.Ts = 0.01;
+run(sc, fracc, commands, times, ndi, 10, fig);
+
 %%
 close all;

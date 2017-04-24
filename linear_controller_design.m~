@@ -10,23 +10,17 @@ D = c2d(A,0.1);                 % Zero order hold representation of the sampled 
 E = c2d(B,0.1);
 F = c2d(C,0.1);
 % sisotool(B);
-G = 20 * (z-0.959)/z;
+G = 7 * (z-0.9942)/z;
 % sisotool(B,c);
 
-% margin(D*G)
-% margin(E*G)
+margin(D*G)
+margin(E*G)
 margin(F*G)
 
-
-
-
-%%% Fractional control 
-r = 1.6;
-N = 4;
-w_H = 2*pi*15;
-w_L = 2*pi;
-H = Krone_approx(r,N,w_L, w_H);
-[Gm,Pm,Wgm,Wpm] = margin(F*H);
-
-
-
+%% Qua
+%% 
+G2 = Krone_approx(1, 4, 0.0001, 10);
+margin(C* s*G2/(0.1s +1)
+%%
+H = c2d(G2, 0.1)
+margin(F*H)

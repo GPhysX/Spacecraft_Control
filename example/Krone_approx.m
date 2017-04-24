@@ -1,4 +1,4 @@
-function H = Krone_approx(r, N, w_L, w_H)
+function G = Krone_approx(r, N, w_L, w_H)
     zeros = -w_L * (w_H/w_L).^( (2*(1:N)-1-r) / (2*N) );
     poles = -w_L * (w_H/w_L).^( (2*(1:N)-1+r) / (2*N) );
     G = tf(zpk(zeros, poles, 1));
@@ -8,6 +8,4 @@ function H = Krone_approx(r, N, w_L, w_H)
     else
         G = G * ((j*wmean)^r) / squeeze(freqresp(G, wmean));
     end
-    H = c2d(G, 0.1);
-
 end
