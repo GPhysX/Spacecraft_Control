@@ -5,11 +5,9 @@ classdef spacecraft < handle
         Tc = zeros(3,1);
         t = 0;
         Ts = 0.1;
-        Td = [0.0001 0.0001 0.0001]'; 
-    end
-    properties (SetAccess = immutable)
-        H = [eye(3) zeros(3)];
+        Td = [0.0001 0.0001 0.0001]';
         J = [124.531 0 0; 0 124.586 0; 0 0 0.704];
+        H = [eye(3) zeros(3)];
         orbit = 700;
         orbit_period = 5917.46;
     end

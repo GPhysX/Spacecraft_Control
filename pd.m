@@ -16,7 +16,7 @@ classdef pd
 %             self.v = - [self.error(x) self.er1] * [8.9652  -25.9300   24.9746   -8.0097]' - self.v1 * [-2.0978    1.3077   -0.2085]';
 %             self.v = 1/4*([self.error(x) self.er1] * [19.9526  -57.7048   55.5746  -17.8224]' - self.v1 * [-2.0978    1.3076   -0.2085]');            
 %             self.v = -self.kp * self.error(x) - self.kd*(self.error(x) - self.er1(:,1))/self.Ts;
-            self.v =   -6.6337* (self.error(x)-0.9942*self.er1(:,1));
+            self.v =   -10* (self.error(x)-0.994*self.er1(:,1));
 %             self.v =   -20 * (self.error(x)-0.959*self.er1(:,1));
             er2 = self.er1(:,1:end-1);
             self.er1 = [self.error(x) er2];

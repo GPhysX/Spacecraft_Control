@@ -1,6 +1,6 @@
 commands = {[0 0 0]'; [70 70 70]'; [-70 -70 -70]';[0 0 0]'};
 times = [9.99, 50, 90, 150];
-fig = 1;
+fig = 0;
 
 %% PD, quaternions
 sc = spacecraft_q;
@@ -52,13 +52,20 @@ run(sc, c, commands, times, indi_q, 10, fig);
 sc = spacecraft;
 sc.Ts = 0.01;
 c = pd;
-% c.kp = c.kp*0.1;
 run(sc, c, commands, times, indi, 10, fig);
 
-%% NDI, euler angles, fractional
+%% NDI, quaternions, timesep
 sc = spacecraft;
+sc.J = 0.8 *sc.J;
+c = pd;
 sc.Ts = 0.01;
-run(sc, fracc, commands, times, ndi, 10, fig);
+run(sc, c, commands, times, ndi, 10, fig);
 
+%% INDI, quaternions, timesep
+sc = spacecraft;
+sc.J = 0.8 *sc.J;
+sc.Ts = 0.01;
+c = pd;
+run(sc, c, commands, times, indi, 10, fig);
 %%
 close all;

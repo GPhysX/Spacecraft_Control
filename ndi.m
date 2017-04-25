@@ -3,13 +3,14 @@ classdef ndi
     properties
         title = 'NDI';
         u
+        sc = spacecraft;
     end
     methods
-        function self = control(self, s, v)
+        function self = control(self, x, v)
+ 			% Update internal model to the current state
+            self.sc = self.sc.update_x(x);
             % Linearizing control law
-            % s = spacecraft object
-            % v = desired second derivative of theta
-            self.u = s.J*inv(s.N)*(v-s.N_d*s.rot) + s.OM*s.J*s.rot - s.Td;
+            self.u = self.sc.J*inv(self.sc.N)*(v-self.sc.N_d*self.sc.rot) + self.sc.OM*self.sc.J*self.sc.rot - self.sc.Td;
         end
     end
 end
