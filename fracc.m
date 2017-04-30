@@ -11,7 +11,8 @@ classdef fracc
     end
     methods
         function self = control(self, x, s)
-            self.v = - [self.error(x) self.er1(:,1:3)] * [8.9652  -25.9300   24.9746   -8.0097]' - self.v1(:,1:3) * [-2.0978    1.3077   -0.2085]';
+%             self.v = - [self.error(x) self.er1(:,1:3)] * [8.9652  -25.9300   24.9746   -8.0097]' - self.v1(:,1:3) * [-2.0978    1.3077   -0.2085]';
+            self.v = - [self.error(x) self.er1(:,1:4)] * [10.0000  -39.4198   58.2611  -38.2630    9.4216]' - self.v1(:,1:4) * [-3.3099    3.9664   -2.0032    0.3466]';
             er2 = self.er1(:,1:end-1);
             self.er1 = [self.error(x) er2];
             v2 = self.v1(:,1:end-1);

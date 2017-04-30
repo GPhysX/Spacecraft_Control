@@ -4,7 +4,7 @@ classdef pd_q < pd
     end
     methods
         function self = control(self, x)
-            self.v = -1.6*self.error(x) - 2*x(5:7);
+            self.v = -self.error(x) - self.kd * x(5:7);
             self.er1 = self.error(x);
         end        
         function self = setref_d(self, ref)

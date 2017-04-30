@@ -1,4 +1,4 @@
-function [sc, c, c2, time] = run(sc, c, commands, times, c2, timesep, figureflg)
+function [sc, c, c2, time, thetas] = run(sc, c, commands, times, c2, timesep, figureflg)
     i = 0;
     k = 0;
     cont = zeros(15000,3);
@@ -25,7 +25,7 @@ function [sc, c, c2, time] = run(sc, c, commands, times, c2, timesep, figureflg)
                 i;
                 sc.theta * 180 / pi;
                 %find the virtual control
-                c = c.control(sc.x, sc);            
+                c = c.control(sc.x);            
             end
             k = k + 1;
             e2(k,:) = (180/pi*sc.theta'- [1 1 1]*commands{j});
@@ -46,13 +46,15 @@ function [sc, c, c2, time] = run(sc, c, commands, times, c2, timesep, figureflg)
             end
         end
     end
-    title1 = string(strcat({'Response of spacecraft in '}, sc.title, {' with '}, c2.title, {' controller.'}));
-    title2 = strcat({'Ts = '},  string(sc.Ts), {'; time seperation factor = '}, string(ts));
+    %-----------------------PLOTS----------------------------------------
+    title1 = string(strcat({'Response of spacecraft in '}, sc.title));
+    title2 = string(strcat({' with '}, c2.title, {' controller.'}));
+    title3 = strcat({'Ts = '},  string(sc.Ts), {'; time seperation factor = '}, string(ts));
 
     if figureflg
         figure
         plot(time(1:i), thetas(1:i,:))
-        title({title1;title2},'Interpreter', 'none');
+        title({title1;title2;title3},'Interpreter', 'none');
         ylabel('Angle (degrees)');
         xlabel('Time (seconds)');
         legend('theta1', 'theta2', 'theta3');
@@ -60,7 +62,7 @@ function [sc, c, c2, time] = run(sc, c, commands, times, c2, timesep, figureflg)
         if isprop(sc,'q')
             figure
             plot(time(1:i), q_s(1:i,:))
-            title({title1;title2},'Interpreter', 'none');
+            title({title1;title2;title3},'Interpreter', 'none');
             ylabel('Quaternion');
             xlabel('Time (seconds)');
             legend('q1', 'q2', 'q3', 'q4');

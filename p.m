@@ -6,7 +6,7 @@ classdef p
     end
     methods
         function self = control(self, x, v)
-            self.u = self.sc.J*v;
+            self.u = self.sc.J * v;
         end
     end
 end
