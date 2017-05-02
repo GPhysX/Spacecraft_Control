@@ -10,6 +10,8 @@ classdef pd_q < pd
             self.er1 = self.error(x);
         end        
         function self = setref_d(self, ref)
+            % Set a new reference. ref is in degrees, translated to rads
+            % and thereafter translated to quaternions.
             ref = pi/180.*ref;
             self.ref_q = [  sin(ref(1)/2)*cos(ref(2)/2)*cos(ref(3)/2) - cos(ref(1)/2)*sin(ref(2)/2)*sin(ref(3)/2);
                             cos(ref(1)/2)*sin(ref(2)/2)*cos(ref(3)/2) + sin(ref(1)/2)*cos(ref(2)/2)*sin(ref(3)/2);

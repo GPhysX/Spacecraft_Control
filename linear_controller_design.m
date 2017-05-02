@@ -1,6 +1,6 @@
 %% Linear (pd) controller design
 % Script for the design of the linear outer loop controllers.
-hold on
+% Model description
 s = tf('s');
 z = tf('z',0.1);
 A = 1/s^2;                      % Ideal model
@@ -11,16 +11,18 @@ D = c2d(A,0.1);                 % Zero order hold representation of the sampled 
 E = c2d(B,0.1);
 F = c2d(C,0.1);
 % sisotool(F);
-
+%% Euler
 G = 10 * (z-0.99) * z^(-1);
-
+figure
+hold on
 % sisotool(E,G);
+% bode(A)
+% bode(B)
 % bode(D)
 % bode(E)
-% bode(E2)
-margin(D*G)
-margin(E*G)
-margin(F*G)
+% margin(D*G)
+% margin(E*G)
+% margin(F*G)
 hold off
 
 %% Quaternions

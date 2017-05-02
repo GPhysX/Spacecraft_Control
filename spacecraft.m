@@ -35,7 +35,7 @@ classdef spacecraft < handle
             G = [zeros(3) zeros(3); inv(self.J) inv(self.J)];
         end
         function f = f(self)
-            f = [self.N*self.rot+0*self.ok; -inv(self.J) * self.OM() * self.J*self.rot];
+            f = [self.N*self.rot+self.ok; -inv(self.J) * self.OM() * self.J*self.rot];
         end
         function OM = OM(self)
             omega = self.rot;
