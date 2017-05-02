@@ -40,7 +40,7 @@ classdef ode87 < handle
             tfinal = tspan(2);
             t = t0;
             % Minimal step size
-            hmin = hmax/100;
+            hmin = hmax/1000;
 
             % constant for step rejection
             reject = 0;
@@ -62,24 +62,24 @@ classdef ode87 < handle
                      h = self.h_;
                   end;
 
-            % Compute the RHS for step of method
+                % Compute the RHS for step of method
                   f(:,1) = spacecraft.x_dotx(x);
                   for j = 1: 12
                       f(:,j+1) = spacecraft.x_dotx(x+h*f*self.a_i_j(:,j));
                   end;
 
-            % Two solution 
+                % Two solution 
                   sol2=x+h*f*self.b_8;
                   sol1=x+h*f*self.b_7;
 
-            % Truncation error 
+                % Truncation error 
                   error_1 = norm(sol1-sol2);
 
-            % Estimate the error and the acceptable error
+                % Estimate the error and the acceptable error
                   Error_step = norm(error_1,'inf');
                   tau = self.tol*max(norm(x,'inf'),1.0);
 
-            % Update the solution only if the error is acceptable
+                % Update the solution only if the error is acceptable
                   if Error_step <= tau                      
                      t = t + h;
                      x = sol2; 
@@ -88,26 +88,26 @@ classdef ode87 < handle
                         return;
                      end
                   end;
-            % Step control
+                % Step control
                   if Error_step == 0.0
                      Error_step = eps*10.0;
                   end;
-                  self.h_ = min(hmax, 0.9*self.h_*(tau/Error_step)^self.pow);
-                  if (abs(self.h_) <= hmin) 
+                  self.h_ = max(hmin,min(hmax, 0.9*self.h_*(tau/Error_step)^self.pow));
+                  if (h <= hmin) 
+                     disp('Warning!!! ode87. Step is small!!!');
+                     t = t + h;
+                     x = sol2; 
+                     xout = x;
+                     if t == tfinal
+                        return;
+                     end
+                  end;
 
-                    disp('Warning!!! ode87. Step is small!!!');
-                    self.h_ = hmin;
-                    return
-
-                  end;                  
                end;
                if (t < tfinal)
                   disp('Error in ODE87...')
                   disp(t);
                end;
-%               if haveoutfun
-%                  feval(outfun,t,x,'done',varargin{:});
-%               end;
         end
     end
 end

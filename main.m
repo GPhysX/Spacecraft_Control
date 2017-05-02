@@ -5,21 +5,17 @@ fig = 1;
 %% PD, quaternions
 sc = spacecraft_q;
 c = pd_q;
-% c.kp = 0.1*c.kp;
 run(sc, c, commands, times, p, 1, fig);
 
 %% PD, euler
 sc = spacecraft;
 sc.Ts = 0.1;
-c = linear;
-c.kp = .1*c.kp;
+c = pd;
 run(sc, c, commands, times, p, 1, fig);
 
 %% NDI, quaternions, no timesep
 sc = spacecraft_q;
-% sc.Ts = 0.1;
 c = pd_q;
-c.kp = 2*pi * c.kp;
 run(sc, c, commands, times, ndi_q, 1, fig);
 %% NDI, euler, no timesep
 sc = spacecraft;

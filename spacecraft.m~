@@ -5,7 +5,7 @@ classdef spacecraft < handle
     % the class method step() propagates the simulation one timestep(Ts)
     % using an ode87 integration scheme. 
     % X represents the state vector containing the three attitude angles
-    % (theta) and three rotational velocities (rot)
+    % and three rotational velocit
     properties
         theta_ = 30/180*pi*ones(3,1);
         rot = zeros(3,1);

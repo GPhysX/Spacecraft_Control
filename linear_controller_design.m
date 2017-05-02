@@ -1,4 +1,5 @@
 %% Linear (pd) controller design
+% Script for the design of the linear outer loop controllers.
 hold on
 s = tf('s');
 z = tf('z',0.1);
@@ -23,19 +24,9 @@ margin(F*G)
 hold off
 
 %% Quaternions
-% figure
+figure
 % sisotool(C)
-Gq = 2*(s+0.1);
-H = c2d(B*Gq, 0.1);
-margin(0.5*H)
+Gq = (3*s+1.5);
+H = c2d(A*Gq, 0.1);
+margin(H)
 
-
-% 
-% %% 
-% G2 = Krone_approx(1, 4, 0.01, 10);
-% % margin(C* s*G2/(0.1s +1)
-% %%
-% 
-% H = c2d(G2*exp(-.4*s), 0.1);
-% % sisotool(E,H);
-% margin(E*.5*H)

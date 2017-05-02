@@ -1,5 +1,6 @@
 classdef ndi
-    %%% This object contains the non linear dynamic inversion control law. 
+    % This object contains the non linear dynamic inversion control law for
+    % the innerloop control of the spacecraft in euler angles.
     properties
         title = 'NDI';
         u

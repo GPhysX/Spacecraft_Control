@@ -1,4 +1,6 @@
 classdef indi
+    % INDI linearizing control law for the innerloop of the spacecraft using
+    % euler angles
     properties
         title = 'INDI';
         u = [0 0 0]';

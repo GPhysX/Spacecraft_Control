@@ -1,8 +1,8 @@
 %% Verification
-% This will test the spacecraft model subject to a number of stepple initial
+% This will test the spacecraft model subject to a number of initial
 % conditions and disturbances.
 
-%% Test for single rotation around orbit
+%% Test for rotation around orbit
 % initialization: disturbance are set to 0, dt is increased to speed up the step
 s = spacecraft;
 s.Td = [0 0 0]';

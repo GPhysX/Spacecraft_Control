@@ -1,10 +1,12 @@
 classdef pd_q < pd
+    % Linear controller for the outer loop of the quaternion representation
+    % of the spacecraft.
     properties
         ref_q = [0 0 0 1]'
     end
     methods
         function self = control(self, x)
-            self.v = -self.error(x) - self.kd * x(5:7);
+            self.v = -1*self.error(x) - 10*x(5:7);
             self.er1 = self.error(x);
         end        
         function self = setref_d(self, ref)

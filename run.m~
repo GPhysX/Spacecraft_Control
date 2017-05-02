@@ -2,17 +2,15 @@ function [sc, c, c2, time, thetas, q_s] = run(sc, c, commands, times, c2, timese
     % This function combines a spacecraft model, an inner loop and an
     % outer loop controller to simulate the spacecraft subject to the
     % attitude commands. The states are returned, plotted and interpreted
-    % depending on the usage of the 'figure' flag. The integer input 'timesep' allow the inner
-    % and outer loop controller to run at different rates. 
+    % depending on the usage of the .
     i = 0;
     k = 0;
-    n = max(times)/sc.Ts;
-    cont = zeros(n,3);
-    thetas = zeros(n,3);
-    time = zeros(n,1);
-    q_s = zeros(n,4);
-    e1 = zeros(n,3);
-    e2 = zeros(n,3);
+    cont = zeros(15000,3);
+    thetas = zeros(15000,3);
+    time = zeros(15000,1);
+    q_s = zeros(15000,4);
+    e1 = zeros(15000,3);
+    e2 = zeros(15000,3);
     if isprop(c2, 'Ts')
         c2.Ts = sc.Ts;
     end
@@ -28,6 +26,8 @@ function [sc, c, c2, time, thetas, q_s] = run(sc, c, commands, times, c2, timese
             i = i+1;        
             if mod(i,ts) == 0
                 e1(i,:) = c.v - sc.rot;
+                i;
+                sc.theta * 180 / pi;
                 %find the virtual control
                 c = c.control(sc.x);            
             end

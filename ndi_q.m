@@ -1,4 +1,6 @@
 classdef ndi_q
+    % This object contains the non linear dynamic inversion control law for
+    % the innerloop control of the spacecraft in quaternions.
     properties
         title = 'NDI';
         u

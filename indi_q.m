@@ -1,4 +1,6 @@
 classdef indi_q
+    % INDI linearizing control law for the innerloop of the spacecraft using
+    % quaternions
     properties
         title = 'INDI';
         u = [0 0 0]';

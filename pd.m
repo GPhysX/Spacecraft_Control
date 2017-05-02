@@ -1,4 +1,6 @@
 classdef pd 
+    % This class implements a discrete outerloop controller optimized for
+    % the euler representation of the spacecraft system.
     properties
         zeta = 0.707;
         kp = 1; 
@@ -11,9 +13,7 @@ classdef pd
     end
     methods
         function self = control(self, x)
-%             self.v = -self.kp * self.error(x) - self.kd*(self.error(x) - self.er1(:,1))/self.Ts;
-%             self.v =   -10* (self.error(x)-0.994*self.er1(:,1));
-            self.v = self.v - 9.589*self.error(x) + 19.17*self.er1(:,1) + 9.575*self.er1(:,2);
+            self.v =   -10* (self.error(x)-0.994*self.er1(:,1));
             er2 = self.er1(:,1:end-1);
             self.er1 = [self.error(x) er2];
             v2 = self.v1(:,1:end-1);

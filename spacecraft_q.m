@@ -1,4 +1,12 @@
 classdef spacecraft_q < spacecraft
+    % This class extends on the spacecraft.m class to add quaternion
+    % representation and differential equations. 
+    % the class method step() propagates the simulation one timestep(Ts)
+    % using an ode87 integration scheme. 
+    % X represents the state vector containing the four quaternions
+    % (q) and three rotational velocities (rot)
+    % the system can be initialized to a certain euler angle attitude using
+    % set_orient_r(theta), with theta the three euler angles in radians
     properties
         q = [0 0 0 1]';
     end
