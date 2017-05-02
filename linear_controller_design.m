@@ -1,5 +1,4 @@
 %% Linear (pd) controller design
-hold on
 s = tf('s');
 z = tf('z',0.1);
 A = 1/s^2;                      % Ideal model
@@ -13,13 +12,16 @@ F = c2d(C,0.1);
 
 G = 10 * (z-0.99) * z^(-1);
 
+figure
+hold on
 % sisotool(E,G);
+% bode(A)
+% bode(B)
 % bode(D)
 % bode(E)
-% bode(E2)
-margin(D*G)
-margin(E*G)
-margin(F*G)
+% margin(D*G)
+% margin(E*G)
+% margin(F*G)
 hold off
 
 %% Quaternions

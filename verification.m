@@ -7,6 +7,7 @@
 s = spacecraft;
 s.Td = [0 0 0]';
 s.Ts = 1.25;
+s = s.update_x([0 0 0 0 0 0]');
 % simulate until 1/8th an orbit period has passed (to stay out of any singularities).
 while s.t < s.orbit_period/8
     s = s.step;
