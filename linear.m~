@@ -11,7 +11,7 @@ classdef linear
     end
     methods
         function self = control(self, x, s)
-            self.v = -(self.kp' .* self.error(x) + self.kd'.* x(4:6));
+            self.v = -(self.kp' .* self.error(x) - self.kd'.* (self.error(x)-self.er1(1))/self.Ts);  %elementwize multiplication
             er2 = self.er1(:,1:end-1);
             self.er1 = [self.error(x) er2];
             v2 = self.v1(:,1:end-1);

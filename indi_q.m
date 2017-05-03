@@ -9,15 +9,16 @@ classdef indi_q
         sc = spacecraft_q;
         Ts = 0.01;        
     end
-    methods
+    methods        
         function self = control(self, x, v)
             self.sc = self.sc.update_x(x);
             self = self.d_om(self.sc);
             du = self.sc.J * (v-self.alpha);
             self.u = self.u + du;
-        end
-        
+        end        
         function self = d_om(self, sc)
+            % Calculate rotational acceleration -> saved as alpha
+            % Returns object
             self.alpha = (sc.rot - self.om)/self.Ts;
             self.om = sc.rot;
         end

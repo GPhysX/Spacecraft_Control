@@ -1,5 +1,5 @@
 classdef p
-    % Controller to translate v to u using a factor J
+    % Inner proportional controller using a factor J
     properties
         title = 'P';
         u

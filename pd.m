@@ -13,16 +13,15 @@ classdef pd
     end
     methods
         function self = control(self, x)
-            self.v =   -10* (self.error(x)-0.994*self.er1(:,1));
+            self.v =   -10* (self.error(x)-0.99*self.er1(:,1));
+            % Update history
             er2 = self.er1(:,1:end-1);
             self.er1 = [self.error(x) er2];
             v2 = self.v1(:,1:end-1);
             self.v1 = [self.v v2];
         end
-        function kd = kd(self)
-            kd = 4*sqrt(self.kp);
-        end
         function self = setref_d(self, ref)
+            % Set reference, ref in degrees
             self.ref = pi/180*ref;
         end
         function error = error(self, x)

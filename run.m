@@ -11,8 +11,8 @@ function [sc, c, c2, time, thetas, q_s] = run(sc, c, commands, times, c2, timese
     thetas = zeros(n,3);
     time = zeros(n,1);
     q_s = zeros(n,4);
-    e1 = zeros(n,3);
-    e2 = zeros(n,3);
+    e = zeros(n,3);
+    % Make sure sample times are similar
     if isprop(c2, 'Ts')
         c2.Ts = sc.Ts;
     end
@@ -25,20 +25,21 @@ function [sc, c, c2, time, thetas, q_s] = run(sc, c, commands, times, c2, timese
     for j = 1:length(times)
         c = c.setref_d(commands{j});
         while sc.t < times(j)
-            i = i+1;        
+            i = i+1;
+            % Outer loop -----------------------
             if mod(i,ts) == 0
-                e1(i,:) = c.v - sc.rot;
                 %find the virtual control
                 c = c.control(sc.x);            
-            end
-            k = k + 1;
-            e2(k,:) = (180/pi*sc.theta'- [1 1 1]*commands{j});
+            end % ------------------------------
+
             %find the control torque
             c2 = c2.control(sc.x, c.v);            
             sc.Tc = c2.u;
             cont(i,:) = sc.Tc;
             %propagate the simulation
             sc = sc.step;
+            % update history
+            e(i,:) = (180/pi*sc.theta'- [1 1 1]*commands{j});
             thetas(i,:) = 180/pi*sc.theta';
             if isprop(sc,'q')
                 q_s(i,:) = sc.q';
@@ -72,10 +73,11 @@ function [sc, c, c2, time, thetas, q_s] = run(sc, c, commands, times, c2, timese
             legend('q1', 'q2', 'q3', 'q4');
             saveas(gcf,strcat('./report/img/','q_', c2.title, '_', int2str(timesep), sc.title, '.png'))
         end
+    % Evaluate score  
     else
         title1
         title2
-        error = sum(sum(abs(e2*sc.Ts)))
+        error = sum(sum(abs(e*sc.Ts)))
         control_in = sum(sum(abs(cont*sc.Ts)))
         score = 1.e5/(error + control_in)
     end

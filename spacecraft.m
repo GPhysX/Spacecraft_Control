@@ -19,10 +19,11 @@ classdef spacecraft < handle
         orbit_period = 5917.46;
     end
     properties (Access = private)
+        % Integration scheme
         ode87 = ode87(1.e-6);
     end
     methods
-        function self = step(self)
+        function self = step(self)            
             X = self.ode87.xout(self, [0 self.Ts]);
             self.update_x(X);
             self.t = self.t + self.Ts;

@@ -8,6 +8,13 @@ commands = {[0 0 0]'; [70 70 70]'; [-70 -70 -70]';[0 0 0]'};
 times = [9.99, 50, 90, 150];
 fig = 1;
 
+%% Linear, euler
+run(spacecraft,linear, commands, times,p,1,fig);
+
+%% Linear, quaternions
+run(spacecraft_q,pd_q,commands,times,p,1,fig);
+
+
 %% NDI, quaternions, no timesep
 sc = spacecraft_q;
 c = pd_q;
